@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigoUrbano - Histórico de Ocorrências</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --cor-teal-principal: #009a96;
+            --cor-teal-escuro: #0a7370;
+            --cor-teal-claro: #e6f5f4;
+            --cor-azul-marinho: #0a2540;
+            --cor-azul-marinho-hover: #06182b;
+            --cinza-fundo: #f8f9fa;
+            --cinza-texto: #4a5568;
+            --cinza-borda: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--cinza-texto);
+            background-color: var(--cinza-fundo);
+        }
+
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+        
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .hero-interna {
+            background: linear-gradient(135deg, rgba(10, 37, 64, 0.95) 0%, rgba(0, 154, 150, 0.9) 100%), 
+                        url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1920') center/cover no-repeat;
+            color: #ffffff;
+            padding: 120px 0 60px 0;
+        }
+
+        .btn-teal {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+            border: none;
+        }
+        .btn-teal:hover {
+            background-color: var(--cor-teal-escuro);
+            color: #ffffff;
+        }
+        .btn-outline-teal {
+            border: 1px solid var(--cor-teal-principal);
+            color: var(--cor-teal-principal);
+            background: transparent;
+        }
+        .btn-outline-teal:hover {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+        }
+
+        .bloco-historico {
+            background: #ffffff;
+            border: 1px solid var(--cinza-borda);
+            border-bottom: 4px solid var(--cinza-borda);
+            border-radius: 12px;
+        }
+
+        .table th {
+            color: var(--cor-azul-marinho);
+            font-weight: 600;
+            background-color: #fdfdfd;
+        }
+        .table td {
+            vertical-align: middle;
+            color: var(--cinza-texto);
+        }
+
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .status-analise { background-color: #fff3cd; color: #856404; }
+        .status-processo { background-color: #cce5ff; color: #004085; }
+        .status-resolvido { background-color: #d4edda; color: #155724; }
+
+        footer {
+            background-color: var(--cor-azul-marinho);
+            color: #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="#">
+                    <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                    <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Painel Inicial</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Registrar Ocorrência</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold text-teal" href="#" style="color: var(--cor-teal-principal) !important;">Meus Chamados</a></li>
+                        <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                            <span class="text-muted small me-2">Olá, Cidadão</span>
+                            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3">Sair</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero-interna">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <span class="badge bg-white text-dark rounded-pill px-3 py-2 mb-3 fw-semibold shadow-sm">
+                        <i class="bi bi-folder-fill me-1" style="color: var(--cor-teal-principal)"></i> Histórico de Solicitações (RF9)
+                    </span>
+                    <h1 class="fw-bold mb-2">Acompanhe Seus Chamados</h1>
+                    <p class="lead opacity-90 mb-0" style="font-size: 1.1rem;">Transparência na palma da mão. Monitore os prazos, atualizações e resoluções enviadas pelas secretarias competentes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="py-5">
+        <div class="container">
+            <div class="bloco-historico p-4 bg-white shadow-sm">
+                
+                <div class="row align-items-center mb-4 g-3 border-bottom pb-4">
+                    <div class="col-md-4">
+                        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-filter-left me-2" style="color: var(--cor-teal-principal)"></i>Filtrar por Status</h5>
+                    </div>
+                    <div class="col-md-8 text-md-end">
+                        <div class="btn-group rounded-pill overflow-hidden border shadow-sm" role="group">
+                            <button type="button" class="btn btn-light px-3 py-2 active btn-filtro" data-status="todos">Todos</button>
+                            <button type="button" class="btn btn-light px-3 py-2 btn-filtro" data-status="analise">Em Análise</button>
+                            <button type="button" class="btn btn-light px-3 py-2 btn-filtro" data-status="processo">Em Processo</button>
+                            <button type="button" class="btn btn-light px-3 py-2 btn-filtro" data-status="resolvido">Resolvidos</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle mb-0" id="tabelaOcorrencias">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 15%">Protocolo</th>
+                                <th scope="col" style="width: 15%">Data</th>
+                                <th scope="col" style="width: 25%">Categoria</th>
+                                <th scope="col" style="width: 30%">Localização</th>
+                                <th scope="col" style="width: 15%">Status</th>
+                                <th scope="col" class="text-center" style="width: 10%">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-status="analise">
+                                <td class="fw-bold text-dark">#SU-849204</td>
+                                <td>14/06/2026</td>
+                                <td>
+                                    <span class="d-flex align-items-center"><i class="bi bi-cone-striped me-2" style="color: var(--cor-teal-principal)"></i> Buracos e Vias</span>
+                                </td>
+                                <td class="text-truncate" style="max-width: 240px;">Av. Governador Lacerda, 1205</td>
+                                <td><span class="badge-status status-analise">Em Análise</span></td>
+                                <td class="text-center">
+                                    <a href="#" class="btn btn-outline-teal btn-sm rounded-pill px-3">Detalhes</a>
+                                </td>
+                            </tr>
+                            <tr data-status="processo">
+                                <td class="fw-bold text-dark">#SU-741093</td>
+                                <td>10/06/2026</td>
+                                <td>
+                                    <span class="d-flex align-items-center"><i class="bi bi-lightbulb-fill me-2" style="color: var(--cor-teal-principal)"></i> Iluminação Pública</span>
+                                </td>
+                                <td class="text-truncate" style="max-width: 240px;">Rua Marechal Deodoro, 450 - Centro</td>
+                                <td><span class="badge-status status-processo">Em Processo</span></td>
+                                <td class="text-center">
+                                    <a href="#" class="btn btn-outline-teal btn-sm rounded-pill px-3">Detalhes</a>
+                                </td>
+                            </tr>
+                            <tr data-status="resolvido">
+                                <td class="fw-bold text-dark">#SU-512948</td>
+                                <td>28/05/2026</td>
+                                <td>
+                                    <span class="d-flex align-items-center"><i class="bi bi-trash3-fill me-2" style="color: var(--cor-teal-principal)"></i> Lixo e Descarte</span>
+                                </td>
+                                <td class="text-truncate" style="max-width: 240px;">Estrada Municipal KM 12 - Ipê</td>
+                                <td><span class="badge-status status-resolvido">Resolvido</span></td>
+                                <td class="text-center">
+                                    <a href="#" class="btn btn-outline-teal btn-sm rounded-pill px-3">Detalhes</a>
+                                </td>
+                            </tr>
+                            <tr data-status="resolvido">
+                                <td class="fw-bold text-dark">#SU-498102</td>
+                                <td>15/05/2026</td>
+                                <td>
+                                    <span class="d-flex align-items-center"><i class="bi bi-moisture me-2" style="color: var(--cor-teal-principal)"></i> Alagamentos e Bueiros</span>
+                                </td>
+                                <td class="text-truncate" style="max-width: 240px;">Av. Central, Bairro Industrial</td>
+                                <td><span class="badge-status status-resolvido">Resolvido</span></td>
+                                <td class="text-center">
+                                    <a href="#" class="btn btn-outline-teal btn-sm rounded-pill px-3">Detalhes</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h5 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <img src="logo_cor.png" alt="SigoUrbano" class="me-2" style="height:30px; width:auto;"> SigoUrbano
+                    </h5>
+                    <p class="small text-white-50">Eficiência operacional e transparência radical na governança pública municipal.</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <h5 class="fw-bold text-white mb-3 small text-uppercase tracking-wider">Transparência</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50 text-decoration-none small d-block mb-2">Segurança de Dados (LGPD)</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none small d-block mb-2">Lei de Acesso à Informação</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <h5 class="fw-bold text-white mb-3 small text-uppercase tracking-wider">Contato Oficial</h5>
+                    <p class="text-white-50 small mb-1"><i class="bi bi-envelope me-2"></i>contato@sigourbano.com.br</p>
+                    <p class="text-white-50 small"><i class="bi bi-telephone me-2"></i>0800 700 8000</p>
+                </div>
+            </div>
+            <hr class="my-4 border-secondary">
+            <div class="row">
+                <div class="col text-center">
+                    <p class="text-white-50 small mb-0">&copy; 2026 SigoUrbano. Plataforma estudantil voltada para Smart Cities e Auditoria Governamental.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const botoesFiltro = document.querySelectorAll('.btn-filtro');
+            const linhasTabela = document.querySelectorAll('#tabelaOcorrencias tbody tr');
+
+            botoesFiltro.forEach(botao => {
+                botao.addEventListener('click', () => {
+                    botoesFiltro.forEach(b => b.classList.remove('active'));
+                    botao.classList.add('active');
+
+                    const statusAlvo = botao.getAttribute('data-status');
+
+                    linhasTabela.forEach(linha => {
+                        const statusLinha = staticLinha = linha.getAttribute('data-status');
+                        if (statusAlvo === 'todos' || statusLinha === statusAlvo) {
+                            linha.style.display = '';
+                        } else {
+                            linha.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

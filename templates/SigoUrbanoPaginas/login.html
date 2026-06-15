@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigoUrbano - Plataforma Inteligente de Zeladoria Municipal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cor-teal: #009a96;
+            --cor-teal-hover: #007f7c;
+            --cor-teal-claro: #f0fdfa;
+            --cor-marinho: #0a2540;
+            --cor-marinho-soft: #1e3a5a;
+            --cinza-fundo: #f8fafc;
+            --cinza-card: #ffffff;
+            --cinza-texto: #475569;
+            --cinza-borda: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--cinza-texto);
+            background-color: var(--cinza-fundo);
+            scroll-behavior: smooth;
+        }
+
+        /* Navbar Elaborada */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--cinza-borda);
+            transition: all 0.3s ease;
+        }
+        .logo-img {
+            height: 42px;
+            width: auto;
+        }
+        .nav-link {
+            font-weight: 500;
+            color: var(--cor-marinho) !important;
+            transition: color 0.2s;
+        }
+        .nav-link:hover {
+            color: var(--cor-teal) !important;
+        }
+
+        /* Hero Section Premium */
+        .hero-section {
+            position: relative;
+            background: radial-gradient(circle at 80% 20%, rgba(0, 154, 150, 0.15) 0%, transparent 50%),
+                        linear-gradient(135deg, #0a2540 0%, #051424 100%);
+            color: #ffffff;
+            padding: 180px 0 120px 0;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54 48c-2 0-3 1-4 2v4c0 1-1 2-2 2H4c-1 0-2-1-2-2V4c0-1 1-2 2-2h40c1 0 2 1 2 2v4c1 1 2 2 4 2s3-1 4-2V4c0-3.3-2.7-6-6-6H4C.7-6-2-3.3-2 0v52c0 3.3 2.7 6 6 6h44c3.3 0 6-2.7 6-6v-4c0-1-1-2-2-2zM4 52V4h40v4H8c-1 0-2 1-2 2v42H4z' fill='%23009a96' fill-opacity='0.04' fill-rule='evenodd'%3E%3C/path%3E%3C/svg%3E");
+        }
+        
+        /* Floating Glass Card (Hero) */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Botões Customizados */
+        .btn-teal {
+            background-color: var(--cor-teal);
+            color: white;
+            font-weight: 600;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-teal:hover {
+            background-color: var(--cor-teal-hover);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 154, 150, 0.3);
+        }
+        .btn-marinho {
+            background-color: var(--cor-marinho);
+            color: white;
+            font-weight: 600;
+            border: none;
+        }
+        .btn-marinho:hover {
+            background-color: #11365c;
+            color: white;
+        }
+
+        /* Cards de Categorias Dinâmicos */
+        .grid-ocorrencia .card-servico {
+            background: var(--cinza-card);
+            border: 1px solid var(--cinza-borda);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+        }
+        .grid-ocorrencia .card-servico:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(10, 37, 64, 0.08);
+            border-color: var(--cor-teal);
+        }
+        .icon-circle {
+            width: 64px;
+            height: 64px;
+            background-color: var(--cor-teal-claro);
+            color: var(--cor-teal);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Seção Dashboard Mockup */
+        .mockup-window {
+            background: #ffffff;
+            border: 1px solid var(--cinza-borda);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(10, 37, 64, 0.15);
+            overflow: hidden;
+        }
+        .mockup-header {
+            background: #f1f5f9;
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid var(--cinza-borda);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+        .dot-r { background: #ef4444; }
+        .dot-y { background: #eab308; }
+        .dot-g { background: #22c55e; }
+
+        /* Linha do Tempo (Como Funciona) */
+        .timeline-steps {
+            position: relative;
+        }
+        .timeline-step-item {
+            position: relative;
+            z-index: 2;
+        }
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background-color: var(--cor-teal);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin: 0 auto 1.5rem auto;
+            box-shadow: 0 0 0 8px var(--cor-teal-claro);
+        }
+
+        /* Equipe Section */
+        .card-membro {
+            background: white;
+            border: 1px solid var(--cinza-borda);
+            border-radius: 20px;
+            padding: 2.5rem 1.5rem;
+            transition: all 0.3s;
+        }
+        .card-membro:hover {
+            border-color: var(--cor-teal);
+            box-shadow: 0 12px 24px rgba(0, 154, 150, 0.06);
+        }
+        .avatar-membro {
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border: 4px solid var(--cor-teal-claro);
+            padding: 3px;
+        }
+        .social-links a {
+            color: var(--cinza-texto);
+            margin: 0 8px;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+        }
+        .social-links a:hover {
+            color: var(--cor-teal);
+        }
+
+        /* Gráficos em CSS Puro */
+        .custom-bar {
+            height: 24px;
+            background-color: var(--cor-teal);
+            border-radius: 6px;
+            transition: width 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top shadow-sm py-3">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark fs-4" href="#">
+                    <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                    <span style="color: var(--cor-teal)">Sigo</span><span style="color: var(--cor-marinho)">Urbano</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center gap-2">
+                        <li class="nav-item"><a class="nav-link px-3" href="#ocorrencias">Ocorrências</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle px-3" href="#" id="dropGov" role="button" data-bs-toggle="dropdown">Secretarias</a>
+                            <ul class="dropdown-menu border-0 shadow-lg mt-2">
+                                <li><a class="dropdown-menu-item dropdown-item small py-2" href="#ocorrencias">Obras & Vias</a></li>
+                                <li><a class="dropdown-menu-item dropdown-item small py-2" href="#ocorrencias">Serviços Urbanos</a></li>
+                                <li><a class="dropdown-menu-item dropdown-item small py-2" href="#ocorrencias">Meio Ambiente</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link px-3" href="#dashboard">Painel Público</a></li>
+                        <li class="nav-item"><a class="nav-link px-3" href="#como-funciona">Como Funciona</a></li>
+                        <li class="nav-item"><a class="nav-link px-3" href="#equipe">Nossa Equipe</a></li>
+                        <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                            <button class="btn btn-link text-decoration-none fw-semibold me-2 text-dark" data-bs-toggle="modal" data-bs-target="#modalLogin">Entrar</button>
+                            <button class="btn btn-teal rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#modalCadastro">Cadastrar-se</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero-section d-flex align-items-center min-vh-100">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 text-center text-lg-start">
+                    <span class="badge bg-soft rounded-pill px-3 py-2 mb-3 fw-medium text-white" style="background: rgba(0, 154, 150, 0.25);">
+                        <i class="bi bi-patch-check-fill text-info me-2"></i>Smart Cities & Transparência Pública
+                    </span>
+                    <h1 class="display-3 fw-bold mb-4 tracking-tight">A auditoria da sua cidade na palma da mão.</h1>
+                    <p class="lead mb-4 text-white-50 fs-5">O SigoUrbano unifica canais de denúncia, gera geolocalização exata de falhas de infraestrutura e audita o tempo de resposta das equipes municipais em tempo integral.</p>
+                    <div class="d-grid d-md-flex gap-3 justify-content-center justify-content-lg-start pt-2">
+                        <button class="btn btn-teal btn-lg px-5 py-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#modalCadastro">
+                            <i class="bi bi-megaphone-fill me-2"></i>Reportar Problema Novo
+                        </button>
+                        <a href="#dashboard" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill">
+                            <i class="bi bi-bar-chart-fill me-2"></i>Auditar Indicadores
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="glass-card position-relative">
+                        <div class="bg-white text-dark p-3 rounded-3 shadow-lg position-absolute top-0 start-0 translate-middle d-none d-md-flex align-items-center gap-3 border" style="z-index:10; max-width:220px;">
+                            <div class="bg-success text-white rounded-circle p-2 d-flex"><i class="bi bi-check-lg fs-5"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-0 small">94.2% Concluído</h6>
+                                <p class="text-muted mb-0 x-small" style="font-size:0.75rem;">Média de resoluções</p>
+                            </div>
+                        </div>
+                        
+                        <h5 class="fw-bold text-white mb-4"><i class="bi bi-activity text-teal me-2"></i>Atividade Operacional Recente</h5>
+                        <div class="space-y-3">
+                            <div class="p-3 rounded-3 mb-2" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1)">
+                                <div class="d-flex justify-content-between mb-1"><span class="small text-white-50">Troca de Luminárias - Centro</span><span class="badge bg-success py-1">Resolvido</span></div>
+                                <div class="small text-white font-monospace opacity-75" style="font-size: 0.8rem;"><i class="bi bi-geo-alt me-1"></i>Rua XV de Novembro, 402</div>
+                            </div>
+                            <div class="p-3 rounded-3 mb-2" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1)">
+                                <div class="d-flex justify-content-between mb-1"><span class="small text-white-50">Desobstrução de Bueiro</span><span class="badge bg-warning text-dark py-1">Em Triagem</span></div>
+                                <div class="small text-white font-monospace opacity-75" style="font-size: 0.8rem;"><i class="bi bi-geo-alt me-1"></i>Av. Governador Lacerda, 1205</div>
+                            </div>
+                            <div class="p-3 rounded-3" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1)">
+                                <div class="d-flex justify-content-between mb-1"><span class="small text-white-50">Operação Tapa-Buracos</span><span class="badge bg-info text-dark py-1">Equipe a Caminho</span></div>
+                                <div class="small text-white font-monospace opacity-75" style="font-size: 0.8rem;"><i class="bi bi-geo-alt me-1"></i>Rua Dr. Arnaldo, 89</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ocorrencias" class="py-5 bg-white">
+        <div class="container py-5">
+            <div class="row mb-5 align-items-end">
+                <div class="col-lg-6">
+                    <span style="color: var(--cor-teal)" class="fw-bold text-uppercase small tracking-widest">Escopo de Atuação</span>
+                    <h2 class="fw-bold text-dark mt-2 display-6">Zeladoria urbana completa e inteligente</h2>
+                </div>
+                <div class="col-lg-6">
+                    <p class="text-muted mb-0">Nossa plataforma segmenta as demandas direto para os servidores responsáveis por bairro, reduzindo os gargalos tradicionais de secretarias físicas e ouvidores.</p>
+                </div>
+            </div>
+            
+            <div class="row g-4 grid-ocorrencia">
+                <div class="col-md-6 col-lg-3">
+                    <div class="card-servico">
+                        <div class="icon-circle"><i class="bi bi-cone-striped"></i></div>
+                        <h4 class="fw-bold h5 text-dark mb-3">Buracos e Vias</h4>
+                        <p class="text-muted small mb-0">Mapeamento de asfalto deteriorado, fissuras profundas, calçadas danificadas e vistorias de recapeamento.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card-servico">
+                        <div class="icon-circle"><i class="bi bi-lightbulb-fill"></i></div>
+                        <h4 class="fw-bold h5 text-dark mb-3">Iluminação Pública</h4>
+                        <p class="text-muted small mb-0">Pontos sem energia, lâmpadas de LED danificadas ou braços de postes com fiação exposta.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card-servico">
+                        <div class="icon-circle"><i class="bi bi-trash3-fill"></i></div>
+                        <h4 class="fw-bold h5 text-dark mb-3">Lixo e Descarte</h4>
+                        <p class="text-muted small mb-0">Acúmulo irregular de entulhos em áreas verdes, móveis abandonados e falhas na coleta programada.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card-servico">
+                        <div class="icon-circle"><i class="bi bi-moisture"></i></div>
+                        <h4 class="fw-bold h5 text-dark mb-3">Alagamentos</h4>
+                        <p class="text-muted small mb-0">Bocas de lobo totalmente obstruídas, caixas de passagem rompidas ou pontos críticos pós-chuva.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dashboard" class="py-5" style="background-color: #f8fafc;">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-dark display-6">Painel Analítico de Transparência</h2>
+                <p class="text-muted">Acesso público garantido para auditoria social e conformidade regulatória municipal.</p>
+            </div>
+            
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-5">
+                    <h3 class="fw-bold text-dark h4 mb-4"><i class="bi bi-graph-up-arrow text-teal me-2"></i>Métricas de Resolução Anual</h3>
+                    <p class="text-muted small mb-4">Abaixo estão ilustrados os índices de fechamento de chamados abertos de forma transparente pela comunidade local.</p>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1 small fw-medium"><span class="text-dark">Iluminação e Postes</span><span>96%</span></div>
+                        <div class="progress" style="height: 12px;"><div class="progress-bar" style="width: 96%; background-color: var(--cor-teal);"></div></div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1 small fw-medium"><span class="text-dark">Pavimentação e Asfalto</span><span>88%</span></div>
+                        <div class="progress" style="height: 12px;"><div class="progress-bar" style="width: 88%; background-color: var(--cor-teal);"></div></div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1 small fw-medium"><span class="text-dark">Saneamento e Bueiros</span><span>91%</span></div>
+                        <div class="progress" style="height: 12px;"><div class="progress-bar" style="width: 91%; background-color: var(--cor-teal);"></div></div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-7">
+                    <div class="mockup-window">
+                        <div class="mockup-header">
+                            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+                            <span class="text-muted x-small ms-2" style="font-size:0.75rem;">admin_panel_sigourbano/mapa_realtime</span>
+                        </div>
+                        <div class="p-4 bg-light">
+                            <div class="row g-3 mb-3 text-center">
+                                <div class="col-4"><div class="bg-white p-3 rounded border shadow-sm"><span class="text-muted d-block small">Abertos</span><strong class="fs-4 text-danger">41</strong></div></div>
+                                <div class="col-4"><div class="bg-white p-3 rounded border shadow-sm"><span class="text-muted d-block small">Em Andamento</span><strong class="fs-4 text-warning">18</strong></div></div>
+                                <div class="col-4"><div class="bg-white p-3 rounded border shadow-sm"><span class="text-muted d-block small">Finalizados</span><strong class="fs-4 text-success">892</strong></div></div>
+                            </div>
+                            <div class="rounded border bg-white p-4 text-center text-muted position-relative" style="height: 200px; background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=600'); background-size: cover; background-content: center;">
+                                <div class="position-absolute top-50 start-50 translate-middle bg-dark text-white p-2 rounded shadow-lg small bg-opacity-75">
+                                    <i class="bi bi-geo-alt-fill text-danger me-1"></i> Exibindo 59 marcações ativas
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="como-funciona" class="py-5 bg-white">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <span style="color: var(--cor-teal);" class="fw-bold text-uppercase small tracking-widest">Fluxo Simplificado</span>
+                <h2 class="fw-bold text-dark display-6 mt-2">O ciclo de resolução da ocorrência</h2>
+            </div>
+            
+            <div class="row g-4 text-center timeline-steps pt-4">
+                <div class="col-md-4 timeline-step-item">
+                    <div class="step-number">1</div>
+                    <h5 class="fw-bold text-dark">Registro Fotográfico</h5>
+                    <p class="text-muted small px-3">O morador envia a foto do problema. O sistema captura automaticamente o endereço via georreferenciamento.</p>
+                </div>
+                <div class="col-md-4 timeline-step-item">
+                    <div class="step-number">2</div>
+                    <h5 class="fw-bold text-dark">Triagem Digital</h5>
+                    <p class="text-muted small px-3">A plataforma valida a ocorrência, gera o protocolo público e aciona a equipe ou terceirizada responsável pelo bairro.</p>
+                </div>
+                <div class="col-md-4 timeline-step-item">
+                    <div class="step-number">3</div>
+                    <h5 class="fw-bold text-dark">Execução Auditada</h5>
+                    <p class="text-muted small px-3">O reparo é finalizado, a equipe anexa a foto de antes/depois e o cidadão recebe um alerta de conclusão.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="equipe" class="py-5" style="background-color: var(--cinza-fundo);">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <span style="color: var(--cor-teal);" class="fw-bold text-uppercase small tracking-widest">Coletivo Acadêmico</span>
+                <h2 class="fw-bold text-dark display-6 mt-2">Nossa Equipe de Engenharia & Design</h2>
+                <p class="text-muted">Estudantes focadas no desenvolvimento de tecnologias disruptivas para o setor governamental.</p>
+            </div>
+            
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-6 col-lg-3">
+                    <div class="card-membro text-center">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300" class="rounded-circle avatar-membro mb-3" alt="Interface">
+                        <h5 class="fw-bold text-dark h6 mb-1">Nome da Aluna 1</h5>
+                        <p class="small mb-3" style="color: var(--cor-teal); font-weight: 600;">Designer UI/UX</p>
+                        <p class="text-muted x-small mb-3" style="font-size:0.8rem;">Responsável pela arquitetura de informação e padrões visuais da plataforma.</p>
+                        <div class="social-links"><a href="#"><i class="bi bi-linkedin"></i></a><a href="#"><i class="bi bi-github"></i></a></div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card-membro text-center">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=300" class="rounded-circle avatar-membro mb-3" alt="Dev">
+                        <h5 class="fw-bold text-dark h6 mb-1">Nome da Aluna 2</h5>
+                        <p class="small mb-3" style="color: var(--cor-teal); font-weight: 600;">Desenvolvedora</p>
+                        <p class="text-muted x-small mb-3" style="font-size:0.8rem;">Responsável pelas folhas de estilo, interações e estrutura responsiva.</p>
+                        <div class="social-links"><a href="#"><i class="bi bi-linkedin"></i></a><a href="#"><i class="bi bi-github"></i></a></div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card-membro text-center">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=300" class="rounded-circle avatar-membro mb-3" alt="Gerente">
+                        <h5 class="fw-bold text-dark h6 mb-1">Nome da Aluna 3</h5>
+                        <p class="small mb-3" style="color: var(--cor-teal); font-weight: 600;">Gerente de Projetos</p>
+                        <p class="text-muted x-small mb-3" style="font-size:0.8rem;">Responsável pelas regras de conformidade regulatória e mapeamento ágil.</p>
+                        <div class="social-links"><a href="#"><i class="bi bi-linkedin"></i></a><a href="#"><i class="bi bi-github"></i></a></div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card-membro text-center">
+                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=300" class="rounded-circle avatar-membro mb-3" alt="QA">
+                        <h5 class="fw-bold text-dark h6 mb-1">Nome da Aluna 4</h5>
+                        <p class="small mb-3" style="color: var(--cor-teal); font-weight: 600;">Analista de Qualidade</p>
+                        <p class="text-muted x-small mb-3" style="font-size:0.8rem;">Garante a estabilidade multiplataforma e validação estrutural de dados públicos.</p>
+                        <div class="social-links"><a href="#"><i class="bi bi-linkedin"></i></a><a href="#"><i class="bi bi-github"></i></a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h5 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <img src="logo_cor.png" alt="SigoUrbano" class="me-2" style="height:32px; width:auto;"> SigoUrbano
+                    </h5>
+                    <p class="small text-white-50" style="max-width:350px;">Garantindo infraestrutura previsível e auditoria ágil para o ecossistema das cidades inteligentes.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="fw-bold text-white mb-3 small text-uppercase tracking-wider">Políticas & LAI</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50 text-decoration-none small d-block mb-2">Tratamento de Dados LGPD</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none small d-block mb-2">Portal da Transparência Aberta</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <h5 class="fw-bold text-white mb-3 small text-uppercase tracking-wider">Canais de Contato</h5>
+                    <p class="text-white-50 small mb-1"><i class="bi bi-envelope-fill me-2"></i>suporte@sigourbano.com.br</p>
+                    <p class="text-white-50 small"><i class="bi bi-building me-2"></i>Ouvidoria Geral Municipal Integrada</p>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+            <div class="text-center">
+                <p class="text-white-50 small mb-0">&copy; 2026 SigoUrbano. Desenvolvimento acadêmico voltado à transparência pública.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="modalLogin" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius:16px;">
+                <div class="modal-header border-bottom-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold text-dark"><i class="bi bi-lock-fill me-2 text-teal"></i>Autenticação Cidadã</h5>
+                    <button type="button" class="btn-close" data-bs-close="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-4 pb-4">
+                    <form id="formLogin">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted">E-mail funcional ou pessoal</label>
+                            <input type="email" class="form-control py-2" placeholder="nome@provedor.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted">Senha cadastrada</label>
+                            <input type="password" class="form-control py-2" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn btn-teal w-100 rounded-pill py-2.5 mt-2">Acessar Painel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCadastro" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius:16px;">
+                <div class="modal-header border-bottom-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold text-dark"><i class="bi bi-person-plus-fill me-2" style="color:var(--cor-marinho)"></i>Criar Conta no SigoUrbano</h5>
+                    <button type="button" class="btn-close" data-bs-close="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-4 pb-4">
+                    <form id="formCadastro">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted">Nome Completo</label>
+                            <input type="text" class="form-control" placeholder="Insira seu nome completo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted">CPF (Validação obrigatória contra falsos relatos)</label>
+                            <input type="text" class="form-control" placeholder="000.000.000-00" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted">E-mail Principal</label>
+                            <input type="email" class="form-control" placeholder="seu@email.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted">Crie sua senha</label>
+                            <input type="password" class="form-control" placeholder="Mínimo de 6 caracteres" required>
+                        </div>
+                        <button type="submit" class="btn btn-marinho w-100 rounded-pill py-2.5 mt-2">Concluir Registro Público</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('formLogin').addEventListener('submit', (e) => { e.preventDefault(); alert('Acesso processado com sucesso!'); });
+        document.getElementById('formCadastro').addEventListener('submit', (e) => { e.preventDefault(); alert('Cadastro realizado no banco de dados SigoUrbano!'); });
+    </script>
+</body>
+</html>

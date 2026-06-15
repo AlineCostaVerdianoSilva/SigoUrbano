@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigoUrbano - Central de Notificações (RF5)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --cor-teal-principal: #009a96;
+            --cor-teal-escuro: #0a7370;
+            --cor-teal-claro: #e6f5f4;
+            --cor-azul-marinho: #0a2540;
+            --cinza-fundo: #f8f9fa;
+            --cinza-texto: #4a5568;
+            --cinza-borda: #e2e8f0;
+        }
+
+        /* CORREÇÃO ESTRUTURAL: Garante que nada se sobreponha */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--cinza-fundo);
+            color: var(--cinza-texto);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Navbar Sticky: Ela acompanha a rolagem, mas ocupa espaço físico na tela, impedindo que cubra o conteúdo */
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--cinza-borda);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        /* Seção principal com preenchimento seguro */
+        .main-section {
+            flex: 1 0 auto;
+            padding-top: 40px;
+            padding-bottom: 60px;
+        }
+
+        .bloco-notificacoes {
+            background: #ffffff;
+            border: 1px solid var(--cinza-borda);
+            border-bottom: 4px solid var(--cinza-borda);
+            border-radius: 12px;
+        }
+
+        .notificacao-item {
+            padding: 20px;
+            border-bottom: 1px solid var(--cinza-borda);
+            transition: background-color 0.2s ease;
+            position: relative;
+        }
+        .notificacao-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notificacao-item.nao-lida {
+            background-color: #f4fbfb;
+        }
+        .notificacao-item.nao-lida::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--cor-teal-principal);
+        }
+
+        .ponto-status {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .ponto-nao-lida { background-color: var(--cor-teal-principal); }
+        .ponto-lida { background-color: #cbd5e1; }
+
+        .btn-outline-teal {
+            border: 1px solid var(--cor-teal-principal);
+            color: var(--cor-teal-principal);
+            background: transparent;
+        }
+        .btn-outline-teal:hover {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+        }
+
+        footer {
+            background-color: var(--cor-azul-marinho);
+            color: #e2e8f0;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="#">
+                    <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                    <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Painel Inicial</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Registrar Ocorrência</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Meus Chamados</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Mapa Urbano</a></li>
+                        <li class="nav-item ms-lg-2 position-relative">
+                            <a class="nav-link px-3 active" href="#">
+                                <i class="bi bi-bell-fill text-dark fs-5"></i>
+                                <span class="position-absolute top-1 start-75 translate-middle badge rounded-pill bg-danger" id="badgeNav">2</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-section">
+        <div class="container">
+            
+            <div class="row mb-5 align-items-end g-3 pt-2">
+                <div class="col-md-7">
+                    <span class="badge bg-dark text-white rounded-pill px-3 py-2 mb-3 fw-semibold d-inline-block shadow-sm">
+                        <i class="bi bi-bell text-warning me-1"></i> Central de Alertas (RF5)
+                    </span>
+                    <h1 class="fw-bold text-dark h2 mb-1">Suas Notificações</h1>
+                    <p class="text-muted mb-0">Acompanhe em tempo real as atualizações de status, triagens e resoluções dos seus chamados.</p>
+                </div>
+                <div class="col-md-5 text-md-end">
+                    <button id="btnMarcarTodas" class="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-semibold shadow-sm">
+                        <i class="bi bi-check2-all me-1"></i>Marcar todas como lidas
+                    </button>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-3">
+                    <div class="bloco-notificacoes p-4 bg-white shadow-sm mb-4">
+                        <h5 class="fw-bold h6 text-dark mb-3 text-uppercase tracking-wider">Filtrar Alertas</h5>
+                        <div class="list-group list-group-flush small">
+                            <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 px-0 active btn-filtro-notif" data-filter="todas" style="background: transparent; color: var(--cor-teal-principal); font-weight: 600;">
+                                <span><i class="bi bi-mailbox me-2"></i>Todas</span>
+                                <span class="badge bg-secondary rounded-pill" id="qtdTodas">4</span>
+                            </button>
+                            <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 px-0 text-muted btn-filtro-notif" data-filter="nao-lidas">
+                                <span><i class="bi bi-envelope-fill me-2" style="color: var(--cor-teal-principal)"></i>Não lidas</span>
+                                <span class="badge bg-danger rounded-pill" id="qtdNaoLidas">2</span>
+                            </button>
+                            <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 px-0 text-muted btn-filtro-notif" data-filter="lidas">
+                                <span><i class="bi bi-envelope-open me-2"></i>Lidas</span>
+                                <span class="badge bg-light text-dark border rounded-pill" id="qtdLidas">2</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-9">
+                    <div class="bloco-notificacoes bg-white shadow-sm overflow-hidden" id="containerNotificacoes">
+                        
+                        <div class="notificacao-item nao-lida" data-status="nao-lida">
+                            <div class="d-sm-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex align-items-center">
+                                    <span class="ponto-status ponto-nao-lida me-2 shadow-sm"></span>
+                                    <h5 class="h6 fw-bold text-dark mb-0">Mudança de Status: Concluído</h5>
+                                </div>
+                                <span class="text-muted small mt-1 mt-sm-0 d-block"><i class="bi bi-clock me-1"></i>Hoje, 10:15</span>
+                            </div>
+                            <p class="small text-muted mb-3">O chamado operacional de protocolo <b>#SU-498102</b> referente a "Alagamentos e Bueiros" foi marcado como <b>Resolvido</b> pela Secretaria de Obras.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small">#SU-498102</span>
+                                <a href="#" class="btn btn-outline-teal btn-sm rounded-pill px-3 fw-semibold">Visualizar Ocorrência <i class="bi bi-arrow-right ms-1"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="notificacao-item nao-lida" data-status="nao-lida">
+                            <div class="d-sm-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex align-items-center">
+                                    <span class="ponto-status ponto-nao-lida me-2 shadow-sm"></span>
+                                    <h5 class="h6 fw-bold text-dark mb-0">Mudança de Status: Em Processo</h5>
+                                </div>
+                                <span class="text-muted small mt-1 mt-sm-0 d-block"><i class="bi bi-clock me-1"></i>Ontem, 14:30</span>
+                            </div>
+                            <p class="small text-muted mb-3">Uma Ordem de Serviço foi emitida para o protocolo <b>#SU-741093</b> ("Iluminação Pública"). A equipe técnica foi despachada.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 small">#SU-741093</span>
+                                <a href="#" class="btn btn-outline-teal btn-sm rounded-pill px-3 fw-semibold">Visualizar Ocorrência <i class="bi bi-arrow-right ms-1"></i></a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h5 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <img src="logo_cor.png" alt="SigoUrbano" class="me-2" style="height:30px; width:auto;"> SigoUrbano
+                    </h5>
+                    <p class="small text-white-50">Eficiência operacional e transparência radical na governança pública municipal.</p>
+                </div>
+                <div class="col-md-7 text-center text-md-end align-self-center">
+                    <p class="text-white-50 small mb-0">&copy; 2026 SigoUrbano. Plataforma de apoio à Gestão de Cidades Inteligentes.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnMarcarTodas = document.getElementById('btnMarcarTodas');
+            const itensNotificacao = document.querySelectorAll('.notificacao-item');
+            const badgeNav = document.getElementById('badgeNav');
+            const qtdNaoLidas = document.getElementById('qtdNaoLidas');
+            const qtdLidas = document.getElementById('qtdLidas');
+            const botoesFiltro = document.querySelectorAll('.btn-filtro-notif');
+
+            function atualizarMetricas() {
+                const nl = document.querySelectorAll('.notificacao-item.nao-lida').length;
+                const l = document.querySelectorAll('.notificacao-item:not(.nao-lida)').length;
+                
+                if(badgeNav) badgeNav.textContent = nl;
+                if(qtdNaoLidas) qtdNaoLidas.textContent = nl;
+                if(qtdLidas) qtdLidas.textContent = l;
+                
+                if (nl === 0 && badgeNav) {
+                    badgeNav.style.display = 'none';
+                }
+            }
+
+            btnMarcarTodas.addEventListener('click', () => {
+                itensNotificacao.forEach(item => {
+                    item.classList.remove('nao-lida');
+                    item.setAttribute('data-status', 'lida');
+                    const ponto = item.querySelector('.ponto-status');
+                    if(ponto) {
+                        ponto.className = 'ponto-status ponto-lida me-2';
+                    }
+                    const titulo = item.querySelector('h5');
+                    if(titulo) {
+                        titulo.className = 'h6 fw-semibold text-secondary mb-0';
+                    }
+                });
+                atualizarMetricas();
+            });
+
+            botoesFiltro.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    botoesFiltro.forEach(b => {
+                        b.style.background = 'transparent';
+                        b.style.fontWeight = '400';
+                        b.classList.add('text-muted');
+                    });
+                    
+                    btn.style.color = 'var(--cor-teal-principal)';
+                    btn.style.fontWeight = '600';
+                    btn.classList.remove('text-muted');
+
+                    const filtro = btn.getAttribute('data-filter');
+
+                    itensNotificacao.forEach(item => {
+                        const statusItem = item.getAttribute('data-status');
+                        if(filtro === 'todas' || statusItem === filtro.replace('s', '')) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

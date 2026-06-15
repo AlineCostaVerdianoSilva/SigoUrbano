@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigoUrbano - Registrar Ocorrência</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* MESMA PALETA DE CORES ADAPTADA (Teal, Azul Marinho e Cinza) */
+        :root {
+            --cor-teal-principal: #009a96;   /* Verde-água da logo */
+            --cor-teal-escuro: #0a7370;      /* Tom mais escuro para hovers */
+            --cor-teal-claro: #e6f5f4;       /* Fundo suave para blocos de destaque */
+            --cor-azul-marinho: #0a2540;     /* Azul Marinho Elegante */
+            --cor-azul-marinho-hover: #06182b;
+            --cinza-fundo: #f8f9fa;          /* Fundo neutro e moderno */
+            --cinza-texto: #4a5568;          /* Texto suave */
+            --cinza-borda: #e2e8f0;          /* Divisores discretos */
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--cinza-texto);
+            background-color: #ffffff;
+        }
+
+        /* Navbar Identitária */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        /* Hero Mini / Banner Superior da Página Interna */
+        .hero-interna {
+            background: linear-gradient(135deg, rgba(10, 37, 64, 0.95) 0%, rgba(0, 154, 150, 0.9) 100%), 
+                        url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1920') center/cover no-repeat;
+            color: #ffffff;
+            padding: 120px 0 60px 0;
+        }
+
+        /* Botões Customizados */
+        .btn-teal {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+            border: none;
+        }
+        .btn-teal:hover {
+            background-color: var(--cor-teal-escuro);
+            color: #ffffff;
+        }
+        .btn-marinho {
+            background-color: var(--cor-azul-marinho);
+            color: #ffffff;
+            border: none;
+        }
+        .btn-marinho:hover {
+            background-color: var(--cor-azul-marinho-hover);
+            color: #ffffff;
+        }
+
+        /* Blocos de Formulário Baseados nos Cards da Home */
+        .bloco-formulario {
+            background: #ffffff;
+            border: 1px solid var(--cinza-borda);
+            border-bottom: 4px solid var(--cinza-borda);
+            border-radius: 12px;
+            transition: border-color 0.3s ease;
+        }
+        .bloco-formulario:focus-within {
+            border-bottom-color: var(--cor-teal-principal);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--cor-azul-marinho);
+            font-size: 0.9rem;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid var(--cinza-borda);
+            border-radius: 8px;
+            padding: 0.65rem 1rem;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--cor-teal-principal);
+            box-shadow: 0 0 0 0.25rem rgba(0, 154, 150, 0.15);
+        }
+
+        /* Container do Mapa */
+        .map-wrapper {
+            background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800');
+            background-size: cover;
+            background-position: center;
+            height: 320px;
+            border-radius: 10px;
+            position: relative;
+            border: 1px solid var(--cinza-borda);
+        }
+        .map-pin {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            color: #dc3545;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Área do Upload de Fotos (RF7) */
+        .upload-dropzone {
+            border: 2px dashed var(--cor-teal-principal);
+            background-color: var(--cor-teal-claro);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .upload-dropzone:hover {
+            background-color: #d6f0ee;
+        }
+
+        /* Rodapé */
+        footer {
+            background-color: var(--cor-azul-marinho);
+            color: #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="#">
+                    <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                    <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Painel Inicial</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold active text-teal" href="#" style="color: var(--cor-teal-principal) !important;">Registrar Ocorrência</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Meus Chamados</a></li>
+                        <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                            <span class="text-muted small me-2">Olá, Cidadão</span>
+                            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3">Sair</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero-interna">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 narrative-box">
+                    <span class="badge bg-white text-dark rounded-pill px-3 py-2 mb-3 fw-semibold shadow-sm">
+                        <i class="bi bi-megaphone-fill text-teal me-1" style="color: var(--cor-teal-principal)"></i> Ouvidoria Digital Ativa
+                    </span>
+                    <h1 class="fw-bold mb-2">Registrar Incidente Urbano</h1>
+                    <p class="lead opacity-90 mb-0" style="font-size: 1.1rem;">Informe as falhas de infraestrutura da sua rua. Sua colaboração aciona diretamente a equipe responsável.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="py-5 bg-light">
+        <div class="container">
+            <form id="formOcorrenciaPrincipal" class="needs-validation" novalidate>
+                <div class="row g-4">
+                    
+                    <div class="col-lg-6">
+                        <div class="bloco-formulario p-4 shadow-sm h-100">
+                            <h4 class="h5 fw-bold text-dark mb-4 border-bottom pb-2">
+                                <i class="bi bi-pencil-square me-2" style="color: var(--cor-teal-principal)"></i>1. Detalhes do Relato
+                            </h4>
+
+                            <div class="mb-3">
+                                <label for="categoria" class="form-label">Categoria do Incidente</label>
+                                <select id="categoria" class="form-select" required>
+                                    <option value="" selected disabled>Escolha uma categoria...</option>
+                                    <option value="vias">Buracos e Vias Urbanas</option>
+                                    <option value="iluminacao">Iluminação Pública</option>
+                                    <option value="lixo">Lixo e Descarte Irregular</option>
+                                    <option value="alagamento">Alagamentos e Bueiros</option>
+                                </select>
+                                <div class="invalid-feedback">A seleção da categoria é obrigatória.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="descricao" class="form-label">Descrição da Ocorrência</label>
+                                <textarea id="descricao" class="form-control" rows="4" placeholder="Descreva de forma clara o problema encontrado (ex: tamanho do buraco, riscos à circulação, etc.)." required></textarea>
+                                <div class="invalid-feedback">Insira uma breve descrição da situação.</div>
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label">Anexar Evidências Fotográficas (RF7)</label>
+                                <div class="upload-dropzone" onclick="document.getElementById('inputFotos').click()">
+                                    <i class="bi bi-images fs-2" style="color: var(--cor-teal-principal)"></i>
+                                    <h6 class="fw-bold mt-2 mb-1 text-dark" style="font-size: 0.95rem;">Clique para selecionar arquivos</h6>
+                                    <p class="text-muted small mb-0">Formatos suportados: PNG, JPG (Máx. 5MB por imagem)</p>
+                                    <input type="file" id="inputFotos" class="d-none" accept="image/*" multiple>
+                                </div>
+                                <div id="containerListaFotos" class="mt-2 small text-success fw-semibold"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="bloco-formulario p-4 shadow-sm h-100">
+                            <h4 class="h5 fw-bold text-dark mb-4 border-bottom pb-2">
+                                <i class="bi bi-geo-alt-fill me-2" style="color: #dc3545;"></i>2. Localização do Incidente
+                            </h4>
+
+                            <div class="mb-3">
+                                <label for="endereco" class="form-label">Endereço Aproximado</label>
+                                <div class="input-group">
+                                    <input type="text" id="endereco" class="form-control" placeholder="Rua, Número, Bairro" required>
+                                    <button class="btn btn-marinho text-white px-3" type="button" id="btnLocalizarGps">
+                                        <i class="bi bi-cursor-fill me-1"></i> Usar GPS
+                                    </button>
+                                    <div class="invalid-feedback">Informe o local ou utilize a captura de coordenadas.</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label d-block">Confirme ou ajuste o marcador no mapa abaixo</label>
+                                <div class="map-wrapper">
+                                    <i class="bi bi-geo-alt-fill map-pin"></i>
+                                </div>
+                                <span class="text-muted d-block mt-2" style="font-size: 0.8rem; line-height: 1.4;">
+                                    * O sistema georreferencia automaticamente as demandas para mapeamento e criação de rotas otimizadas das equipes da prefeitura.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12 text-end">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4 py-2 me-2">Cancelar</button>
+                        <button type="submit" class="btn btn-teal rounded-pill px-5 py-2 fw-bold shadow-sm">
+                            <i class="bi bi-check2-circle me-2"></i>Protocolar Ocorrência
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h5 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <img src="logo_cor.png" alt="SigoUrbano" class="me-2" style="height:30px; width:auto;"> SigoUrbano
+                    </h5>
+                    <p class="small text-white-50">Eficiência operacional e transparência radical na governança pública municipal.</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <h5 class="fw-bold text-white mb-3 small text-uppercase tracking-wider">Transparência</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50 text-decoration-none small d-block mb-2">Segurança de Dados (LGPD)</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none small d-block mb-2">Lei de Acesso à Informação</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <h5 class="fw-bold text-white mb-3 small text-uppercase tracking-wider">Contato Oficial</h5>
+                    <p class="text-white-50 small mb-1"><i class="bi bi-envelope me-2"></i>contato@sigourbano.com.br</p>
+                    <p class="text-white-50 small"><i class="bi bi-telephone me-2"></i>0800 700 8000</p>
+                </div>
+            </div>
+            <hr class="my-4 border-secondary">
+            <div class="row">
+                <div class="col text-center">
+                    <p class="text-white-50 small mb-0">&copy; 2026 SigoUrbano. Plataforma estudantil voltada para Smart Cities e Auditoria Governamental.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (() => {
+            'use strict'
+            const form = document.getElementById('formOcorrenciaPrincipal');
+            const inputFotos = document.getElementById('inputFotos');
+            const containerListaFotos = document.getElementById('containerListaFotos');
+            const btnLocalizarGps = document.getElementById('btnLocalizarGps');
+            const campoEndereco = document.getElementById('endereco');
+
+            // Feedback Visual de Arquivos Selecionados
+            inputFotos.addEventListener('change', () => {
+                if (inputFotos.files.length > 0) {
+                    containerListaFotos.innerHTML = `<i class="bi bi-paperclip"></i> Pronto para upload: ${inputFotos.files.length} imagem(ns) anexada(s).`;
+                } else {
+                    containerListaFotos.innerHTML = '';
+                }
+            });
+
+            // Simulação de Coleta de Coordenadas de GPS
+            btnLocalizarGps.addEventListener('click', () => {
+                btnLocalizarGps.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Buscando...';
+                setTimeout(() => {
+                    campoEndereco.value = "Avenida Governador Lacerda, Centro - Setor Comercial (Via GPS)";
+                    btnLocalizarGps.innerHTML = '<i class="bi bi-check-lg text-success"></i> Fixado';
+                }, 1100);
+            });
+
+            // Validação unificada Bootstrap 5
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                } else {
+                    event.preventDefault();
+                    
+                    const ticketProtocolo = "SU-" + Math.floor(100000 + Math.random() * 900000);
+                    alert(`Ocorrência protocolada com sucesso!\n\nNúmero do Chamado: ${ticketProtocolo}\nStatus: Triagem Inicial Automática.`);
+                    
+                    form.reset();
+                    containerListaFotos.innerHTML = '';
+                    form.classList.remove('was-validated');
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+    </script>
+</body>
+</html>
