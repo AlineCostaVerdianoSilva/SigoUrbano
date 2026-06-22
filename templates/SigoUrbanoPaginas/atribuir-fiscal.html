@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigoUrbano - Atribuição de Ocorrências</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --cor-teal-principal: #009a96;
+            --cor-teal-escuro: #0a7370;
+            --cor-teal-claro: #e6f5f4;
+            --cor-azul-marinho: #0a2540;
+            --cinza-fundo: #f8f9fa;
+            --cinza-texto: #4a5568;
+            --cinza-borda: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--cinza-texto);
+            background-color: var(--cinza-fundo);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+        
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .card-painel {
+            background: #ffffff;
+            border: 1px solid var(--cinza-borda);
+            border-bottom: 4px solid var(--cinza-borda);
+            border-radius: 12px;
+        }
+
+        .item-selecionavel {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--cinza-borda);
+            border-radius: 8px;
+        }
+        .item-selecionavel:hover {
+            border-color: var(--cor-teal-principal);
+            background-color: #fafafa;
+            transform: translateX(3px);
+        }
+
+        .item-selecionavel.active {
+            border-color: var(--cor-teal-principal);
+            background-color: var(--cor-teal-claro);
+        }
+
+        .btn-teal {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-teal:hover {
+            background-color: var(--cor-teal-escuro);
+            color: #ffffff;
+        }
+
+        .badge-status {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .badge-disponivel {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .badge-pendente {
+            background-color: #fff3cd;
+            color: #664d03;
+        }
+
+        footer {
+            background-color: var(--cor-azul-marinho);
+            color: #e2e8f0;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="dashboard-gestor.html">
+                    <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                    <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="dashboard-gestor.html">Painel Executivo</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="gerenciar-fiscais.html">Fiscais</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold active" href="triagem.html" style="color: var(--cor-teal-principal) !important;">Triagem Global</a></li>
+                        <li class="nav-item ms-2"><a class="btn btn-outline-danger btn-sm rounded-pill px-3" href="login.html"><i class="bi bi-box-arrow-right me-1"></i>Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="py-5">
+        <div class="container">
+            
+            <div class="row mb-4">
+                <div class="col">
+                    <h1 class="fw-bold text-dark h2">Triagem e Atribuição de Demandas</h1>
+                    <p class="text-muted mb-0">Selecione uma ocorrência em aberto e vincule um fiscal técnico para início do atendimento em campo.</p>
+                </div>
+            </div>
+
+            <div id="alertFeedback" class="alert alert-success alert-dismissible fade show d-none rounded-3" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> <span id="alertMessage">Fiscal atribuído com sucesso à ocorrência!</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="row g-4">
+                
+                <div class="col-lg-6">
+                    <div class="card-painel p-4 bg-white shadow-sm h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                            <h3 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-0">1. Ocorrências Aguardando Fiscal</h3>
+                            <span class="badge bg-danger rounded-pill small" id="badgeOcorrenciasContador">3</span>
+                        </div>
+                        
+                        <div class="overflow-y-auto pe-1" style="max-height: 500px;" id="listaOcorrencias">
+                            <div class="item-selecionavel p-3 mb-2 bg-white" onclick="selecionarOcorrencia(this, 'SU-849204', 'Buracos e Vias', 'Av. Gov. Lacerda, 1205')">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <span class="fw-bold text-dark d-block">#SU-849204</span>
+                                        <span class="small fw-semibold text-teal d-block" style="color: var(--cor-teal-principal)">Buracos e Vias</span>
+                                        <p class="small text-muted mb-0 mt-1"><i class="bi bi-geo-alt me-1 text-danger"></i>Av. Gov. Lacerda, 1205</p>
+                                    </div>
+                                    <span class="badge bg-danger-subtle text-danger rounded-pill fs-8 fw-bold">Alta</span>
+                                </div>
+                            </div>
+                            <div class="item-selecionavel p-3 mb-2 bg-white" onclick="selecionarOcorrencia(this, 'SU-512948', 'Lixo e Descarte', 'Estrada Municipal KM 12')">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <span class="fw-bold text-dark d-block">#SU-512948</span>
+                                        <span class="small fw-semibold text-teal d-block" style="color: var(--cor-teal-principal)">Lixo e Descarte</span>
+                                        <p class="small text-muted mb-0 mt-1"><i class="bi bi-geo-alt me-1 text-danger"></i>Estrada Municipal KM 12 - Ipê</p>
+                                    </div>
+                                    <span class="badge bg-danger-subtle text-danger rounded-pill fs-8 fw-bold">Alta</span>
+                                </div>
+                            </div>
+                            <div class="item-selecionavel p-3 mb-2 bg-white" onclick="selecionarOcorrencia(this, 'SU-201943', 'Vazamento de Água', 'Rua Bernardo Horta, 89')">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <span class="fw-bold text-dark d-block">#SU-201943</span>
+                                        <span class="small fw-semibold text-teal d-block" style="color: var(--cor-teal-principal)">Vazamento de Água</span>
+                                        <p class="small text-muted mb-0 mt-1"><i class="bi bi-geo-alt me-1 text-danger"></i>Rua Bernardo Horta, 89</p>
+                                    </div>
+                                    <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill fs-8 fw-bold">Média</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card-painel p-4 bg-white shadow-sm h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                            <h3 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-0">2. Fiscais Disponíveis</h3>
+                            <span class="text-muted small"><i class="bi bi-info-circle me-1"></i>Selecione um fiscal após escolher a ocorrência</span>
+                        </div>
+
+                        <div class="overflow-y-auto pe-1" style="max-height: 500px;" id="listaFiscais">
+                            <div class="item-selecionavel p-3 mb-2 bg-white" onclick="selecionarFiscal(this, 'Carlos Souza', 'Obras e Infraestrutura')">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="fw-bold text-dark d-block">Carlos Souza</span>
+                                        <span class="small text-muted d-block"><i class="bi bi-briefcase me-1"></i>Obras e Infraestrutura</span>
+                                    </div>
+                                    <span class="badge-status badge-disponivel">0 Chamados</span>
+                                </div>
+                            </div>
+                            <div class="item-selecionavel p-3 mb-2 bg-white" onclick="selecionarFiscal(this, 'Mariana Costa', 'Serviços Urbanos')">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="fw-bold text-dark d-block">Mariana Costa</span>
+                                        <span class="small text-muted d-block"><i class="bi bi-briefcase me-1"></i>Serviços Urbanos</span>
+                                    </div>
+                                    <span class="badge-status badge-pendente">2 Pendentes</span>
+                                </div>
+                            </div>
+                            <div class="item-selecionavel p-3 mb-2 bg-white" onclick="selecionarFiscal(this, 'Roberto Alves', 'Meio Ambiente')">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="fw-bold text-dark d-block">Roberto Alves</span>
+                                        <span class="small text-muted d-block"><i class="bi bi-briefcase me-1"></i>Meio Ambiente</span>
+                                    </div>
+                                    <span class="badge-status badge-disponivel">0 Chamados</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row mt-4">
+                <div class="col text-end">
+                    <button id="btnDespachar" disabled onclick="abrirModalConfirmacao()" class="btn btn-teal rounded-pill px-5 py-2.5 fw-bold shadow-sm">
+                        <i class="bi bi-send-check-fill me-2"></i>Confirmar Atribuição
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header pt-4 px-4 border-bottom-0">
+                    <h5 class="modal-title fw-bold text-dark">Confirmar Despacho de Ordem</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-4 pb-4 pt-1">
+                    <p class="text-muted">Você está prestes a transferir a responsabilidade operacional desta ocorrência para o fiscal selecionado.</p>
+                    
+                    <div class="p-3 bg-light rounded-3 mb-2">
+                        <span class="small text-muted d-block">Ocorrência Selecionada</span>
+                        <span class="fw-bold text-dark d-block" id="modalTextoOcorrencia">#SU-000000 - Categoria</span>
+                        <span class="small text-muted d-block" id="modalTextoLocal"><i class="bi bi-geo-alt me-1 text-danger"></i>Endereço</span>
+                    </div>
+
+                    <div class="p-3 bg-light rounded-3">
+                        <span class="small text-muted d-block">Fiscal Responsável Designado</span>
+                        <span class="fw-bold text-dark d-block" id="modalTextoFiscal"><i class="bi bi-person text-teal me-1"></i>Nome do Fiscal</span>
+                        <span class="small text-muted d-block" id="modalTextoArea">Secretaria Especializada</span>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 px-4 pb-4">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Ajustar Seleção</button>
+                    <button type="button" onclick="executarAtribucao()" class="btn btn-teal rounded-pill px-4 fw-bold">Confirmar e Notificar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h5 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <img src="logo_cor.png" alt="SigoUrbano" class="me-2" style="height:30px; width:auto;"> SigoUrbano
+                    </h5>
+                    <p class="small text-white-50">Central unificada de controle de fluxos de demandas e despachos municipais em tempo real.</p>
+                </div>
+                <div class="col-md-7 text-center text-md-end align-self-center">
+                    <p class="text-white-50 small mb-0">&copy; 2026 SigoUrbano. Controladoria Executiva Municipal.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Estados internos da tela de triagem
+        let ocorrenciaSelecionada = null;
+        let fiscalSelecionado = null;
+        
+        let elementoOcorrenciaAtivo = null;
+        let elementoFiscalAtivo = null;
+
+        const modalConfirmacaoInstance = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+
+        // Ação: Selecionar um card de Ocorrência
+        function selecionarOcorrencia(elemento, id, categoria, local) {
+            if (elementoOcorrenciaAtivo) elementoOcorrenciaAtivo.classList.remove('active');
+            
+            elementoOcorrenciaAtivo = elemento;
+            elemento.classList.add('active');
+            
+            ocorrenciaSelecionada = { id, categoria, local };
+            verificarDisponibilidadeBotao();
+        }
+
+        // Ação: Selecionar um card de Fiscal
+        function selecionarFiscal(elemento, nome, area) {
+            if (elementoFiscalAtivo) elementoFiscalAtivo.classList.remove('active');
+            
+            elementoFiscalAtivo = elemento;
+            elemento.classList.add('active');
+            
+            fiscalSelecionado = { nome, area };
+            verificarDisponibilidadeBotao();
+        }
+
+        // Libera ou bloqueia o botão de despacho dependendo da combinação de seleções
+        function verificarDisponibilidadeBotao() {
+            const btn = document.getElementById('btnDespachar');
+            if (ocorrenciaSelecionada && fiscalSelecionado) {
+                btn.removeAttribute('disabled');
+            } else {
+                btn.setAttribute('disabled', 'true');
+            }
+        }
+
+        // Alimenta os dados recolhidos no modal de confirmação antes de abri-lo
+        function abrirModalConfirmacao() {
+            document.getElementById('modalTextoOcorrencia').textContent = `#${ocorrenciaSelecionada.id} - ${ocorrenciaSelecionada.categoria}`;
+            document.getElementById('modalTextoLocal').innerHTML = `<i class="bi bi-geo-alt me-1 text-danger"></i>${ocorrenciaSelecionada.local}`;
+            
+            document.getElementById('modalTextoFiscal').textContent = fiscalSelecionado.nome;
+            document.getElementById('modalTextoArea').textContent = fiscalSelecionado.area;
+            
+            modalConfirmacaoInstance.show();
+        }
+
+        // Processa reativamente o encerramento do fluxo e remove a ocorrência despachada da tela
+        function ejecutarAtribucao() {
+            modalConfirmacaoInstance.hide();
+            
+            // Remove fisicamente o card da ocorrência solucionada
+            if(elementoOcorrenciaAtivo) {
+                elementoOcorrenciaAtivo.remove();
+            }
+
+            // Atualiza dinamicamente o contador de pendências na interface
+            const contadorBadge = document.getElementById('badgeOcorrenciasContador');
+            let totalAtual = parseInt(contadorBadge.textContent);
+            contadorBadge.textContent = totalAtual - 1;
+
+            // Exibe mensagem de sucesso amigável ao gestor
+            const alertBox = document.getElementById('alertFeedback');
+            document.getElementById('alertMessage').textContent = `Sucesso! A ocorrência #${ocorrenciaSelecionada.id} foi despachada para o fiscal ${fiscalSelecionado.nome}.`;
+            alertBox.classList.remove('d-none');
+
+            // Limpa as seleções internas para a próxima ação
+            ocorrenciaSelecionada = null;
+            fiscalSelecionado = null;
+            elementoOcorrenciaAtivo = null;
+            if(elementoFiscalAtivo) elementoFiscalAtivo.classList.remove('active');
+            elementoFiscalAtivo = null;
+            verificarDisponibilidadeBotao();
+
+            // Desaparece com o alerta automaticamente após 4 segundos
+            setTimeout(() => {
+                alertBox.classList.add('d-none');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>

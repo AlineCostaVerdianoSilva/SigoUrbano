@@ -24,7 +24,6 @@
             background-color: var(--cinza-fundo);
         }
 
-        /* ALTERADO: Removido o efeito de transparência fixa e adicionado comportamento sticky seguro */
         .navbar {
             background-color: #ffffff;
             border-bottom: 1px solid var(--cinza-borda);
@@ -35,7 +34,6 @@
             width: auto;
         }
 
-        /* CORREÇÃO DE ESPAÇAMENTO: Ajustado para o fluxo padrão pós-navbar */
         .map-section {
             padding-top: 30px;
         }
@@ -106,8 +104,8 @@
     <header>
         <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="#">
-                    <img src="C:\Users\20231imi037\Documents\implementaçaosigourbano\SigoUrbano\templates\SigoUrbanoPaginas\logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="index.html">
+                    <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
                     <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
@@ -115,10 +113,10 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav ms-auto align-items-center">
-                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Painel Inicial</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Registrar Ocorrência</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Meus Chamados</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold active text-teal" href="#" style="color: var(--cor-teal-principal) !important;">Mapa Urbano</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="index.html">Painel Inicial</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="registrar-ocorrencia.html">Registrar Ocorrência</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="chamados.html">Meus Chamados</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold active text-teal" href="mapa.html" style="color: var(--cor-teal-principal) !important;">Mapa Urbano</a></li>
                     </ul>
                 </div>
             </div>
@@ -137,8 +135,8 @@
                     <p class="text-muted mb-md-0">Visão macro para gestores planejarem manutenções e transparência para o cidadão fiscalizar as demandas do município.</p>
                 </div>
                 <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                    <a href="#" class="btn btn-teal rounded-pill px-4 py-2 fw-bold shadow-sm">
-                        <i class="bi bi-list-task me-2"></i>Ver Lista de Chamados
+                    <a href="registrar-ocorrencia.html" class="btn btn-teal rounded-pill px-4 py-2 fw-bold shadow-sm">
+                        <i class="bi bi-plus-circle me-2"></i>Registrar Ocorrência
                     </a>
                 </div>
             </div>
@@ -172,8 +170,8 @@
 
                         <div class="border-top pt-3">
                             <h6 class="small fw-bold text-dark mb-2">Indicadores de Gravidade</h6>
-                            <div class="d-flex align-items-center mb-1 small"><i class="bi bi-circle-fill text-danger me-2"></i> Alta Criticidade</div>
-                            <div class="d-flex align-items-center mb-1 small"><i class="bi bi-circle-fill text-warning me-2"></i> Média Criticidade</div>
+                            <div class="d-flex align-items-center mb-1 small"><i class="bi bi-circle-fill text-danger me-2"></i> Alta Criticidade (Análise)</div>
+                            <div class="d-flex align-items-center mb-1 small"><i class="bi bi-circle-fill text-primary me-2"></i> Média Criticidade (Processo)</div>
                             <div class="d-flex align-items-center small"><i class="bi bi-circle-fill text-success me-2"></i> Baixa / Resolvido</div>
                         </div>
                     </div>
@@ -187,6 +185,47 @@
         </div>
     </main>
 
+    <div class="modal fade" id="modalDetalhesMapa" tabindex="-1" aria-labelledby="modalDetalhesMapaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header pt-4 px-4 border-bottom-0">
+                    <h5 class="modal-title fw-bold text-dark" id="modalDetalhesMapaLabel">Detalhes do Protocolo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-4 pb-4 pt-2">
+                    <div class="bg-light p-3 rounded-3 mb-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="small text-muted d-block">Número do Protocolo</span>
+                            <span class="fw-bold text-dark fs-5" id="detalheProtocolo">#SU-000000</span>
+                        </div>
+                        <span id="detalheBadgeStatus" class="badge-status-map">Status</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="small fw-semibold text-muted d-block mb-1">Categoria do Problema</label>
+                        <p class="text-dark fw-bold mb-0" id="detalheCategoria">Categoria</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small fw-semibold text-muted d-block mb-1">Localização Relatada</label>
+                        <p class="text-dark small mb-0"><i class="bi bi-geo-alt me-1 text-danger"></i> <span id="detalheLocal">Endereço</span></p>
+                    </div>
+
+                    <div class="mb-1">
+                        <label class="small fw-semibold text-muted d-block mb-1">Registro Fotográfico anexado:</label>
+                        <div class="bg-light rounded-3 text-center py-4 border border-dashed">
+                            <i class="bi bi-image text-muted fs-2 d-block mb-1"></i>
+                            <span class="small text-muted">Fotografia homologada pelo cidadão</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 px-4 pb-4">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="pt-5 pb-4 mt-5">
         <div class="container text-center text-md-start">
             <div class="row g-4">
@@ -199,8 +238,8 @@
                 <div class="col-md-3 text-center">
                     <h5 class="fw-bold text-white mb-3 small text-uppercase tracking-wider">Transparência</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="text-white-50 text-decoration-none small d-block mb-2">Segurança de Dados (LGPD)</a></li>
-                        <li><a href="#" class="text-white-50 text-decoration-none small d-block mb-2">Lei de Acesso à Informação</a></li>
+                        <li><a href="lgpd.html" class="text-white-50 text-decoration-none small d-block mb-2">Segurança de Dados (LGPD)</a></li>
+                        <li><a href="lai.html" class="text-white-50 text-decoration-none small d-block mb-2">Lei de Acesso à Informação</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 text-center text-md-end">
@@ -223,6 +262,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
+            // Instanciação centralizada do mapa em Cachoeiro de Itapemirim
             const map = L.map('map').setView([-20.8488, -41.1128], 14);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -237,6 +277,7 @@
                     status: "analise",
                     nomeStatus: "Em Análise",
                     corStatus: "bg-warning text-dark",
+                    hexCor: "#ffc107", 
                     lat: -20.8465,
                     lng: -41.1170,
                     local: "Av. Governador Lacerda, 1205"
@@ -248,6 +289,7 @@
                     status: "processo",
                     nomeStatus: "Em Processo",
                     corStatus: "bg-primary text-white",
+                    hexCor: "#0d6efd", 
                     lat: -20.8520,
                     lng: -41.1090,
                     local: "Rua Marechal Deodoro, 450"
@@ -259,6 +301,7 @@
                     status: "resolvido",
                     nomeStatus: "Resolvido",
                     corStatus: "bg-success text-white",
+                    hexCor: "#198754", 
                     lat: -20.8430,
                     lng: -41.1020,
                     local: "Estrada Municipal KM 12 - Ipê"
@@ -270,6 +313,7 @@
                     status: "resolvido",
                     nomeStatus: "Resolvido",
                     corStatus: "bg-success text-white",
+                    hexCor: "#198754",
                     lat: -20.8550,
                     lng: -41.1210,
                     local: "Av. Central, Bairro Industrial"
@@ -277,6 +321,22 @@
             ];
 
             let marcadoresAtivos = [];
+            const bsModalDetalhes = new bootstrap.Modal(document.getElementById('modalDetalhesMapa'));
+
+            window.abrirDetalhesOcorrencia = function(id) {
+                const item = ocorrencias.find(o => o.id === id);
+                if (item) {
+                    document.getElementById('detalheProtocolo').textContent = `#${item.id}`;
+                    document.getElementById('detalheCategoria').textContent = item.nomeCategoria;
+                    document.getElementById('detalheLocal').textContent = item.local;
+                    
+                    const badge = document.getElementById('detalheBadgeStatus');
+                    badge.className = `badge-status-map ${item.corStatus}`;
+                    badge.textContent = item.nomeStatus;
+                    
+                    bsModalDetalhes.show();
+                }
+            };
 
             function renderizarMarcadores() {
                 marcadoresAtivos.forEach(m => map.removeLayer(m));
@@ -290,7 +350,18 @@
                     const atendeStatus = (statusSelecionado === 'todos' || item.status === statusSelecionado);
 
                     if (atendeCategoria && atendeStatus) {
-                        const marker = L.marker([item.lat, item.lng]).addTo(map);
+                        
+                        let corPinoHex = item.hexCor;
+                        if(item.status === 'analise') corPinoHex = '#dc3545'; 
+
+                        const marker = L.circleMarker([item.lat, item.lng], {
+                            radius: 10,
+                            fillColor: corPinoHex,
+                            color: '#ffffff',
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 0.9
+                        }).addTo(map);
                         
                         const conteudoPopup = `
                             <div style="min-width: 200px; padding: 2px;">
@@ -301,7 +372,7 @@
                                 </p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="badge-status-map ${item.corStatus}">${item.nomeStatus}</span>
-                                    <a href="#" class="small text-decoration-none fw-bold" style="color: var(--cor-teal-principal); margin-left: 8px;">Ver detalhes</a>
+                                    <button onclick="abrirDetalhesOcorrencia('${item.id}')" class="btn btn-link p-0 small text-decoration-none fw-bold shadow-none" style="color: var(--cor-teal-principal); font-size: 0.85rem; margin-left: 8px;">Ver detalhes</button>
                                 </div>
                             </div>
                         `;

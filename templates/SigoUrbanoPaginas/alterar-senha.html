@@ -143,7 +143,7 @@
         <div class="card-alteracao">
             
             <div class="brand-header">
-                <img src="C:\Users\20231imi037\Documents\implementaçaosigourbano\SigoUrbano\templates\SigoUrbanoPaginas\logo_cor.png" alt="SigoUrbano Logo" class="logo-img">
+                <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img">
                 <h1 class="h4 fw-bold mb-1">
                     <span style="color: var(--cor-teal)">Sigo</span><span style="color: var(--cor-marinho)">Urbano</span>
                 </h1>
@@ -198,7 +198,7 @@
                     </button>
 
                     <div class="text-center border-top pt-3 small">
-                        <a href="#" class="link-marinho"><i class="bi bi-arrow-left me-1"></i>Voltar ao Painel Principal</a>
+                        <a href="index.html" class="link-marinho"><i class="bi bi-arrow-left me-1"></i>Voltar ao Painel Principal</a>
                     </div>
 
                 </form>
@@ -232,9 +232,13 @@
                     event.preventDefault();
                     
                     // Simulação bem-sucedida do caso de uso
-                    alert('Senha atualizada com sucesso!\n\nSuas novas credenciais de acesso foram modificadas na base de dados do SigoUrbano.');
+                    alert('Senha atualizada com sucesso!\n\nSuas novas credenciais de acesso foram modificadas na base de dados do SigoUrbano.\nPor segurança, faça login novamente com os novos dados.');
+                    
                     form.reset();
                     form.classList.remove('was-validated');
+                    
+                    // Redireciona o usuário para revalidar o login com as credenciais recém-alteradas
+                    window.location.href = 'login.html';
                     return;
                 }
 

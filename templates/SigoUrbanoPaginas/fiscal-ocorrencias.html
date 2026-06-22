@@ -93,7 +93,7 @@
     <header>
         <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="#">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="index.html">
                     <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
                     <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
                 </a>
@@ -102,9 +102,10 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav ms-auto align-items-center">
-                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Painel Inicial</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold active" href="#" style="color: var(--cor-teal-principal) !important;">Visualizar Ocorrências</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Mapa Urbano</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="index.html">Painel Inicial</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold active" href="triagem.html" style="color: var(--cor-teal-principal) !important;">Visualizar Ocorrências</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="mapa-ocorrencia.html">Mapa Urbano</a></li>
+                        <li class="nav-item ms-2"><a class="btn btn-outline-danger btn-sm rounded-pill px-3" href="login.html"><i class="bi bi-box-arrow-right me-1"></i>Sair</a></li>
                     </ul>
                 </div>
             </div>
@@ -131,7 +132,7 @@
 
             <div class="bloco-card p-4 bg-white shadow-sm mb-4">
                 <h5 class="h6 fw-bold text-dark mb-3 text-uppercase tracking-wider">
-                    <i class="bi bi-filter-left me-2 style="color: var(--cor-teal-principal)"></i>Filtrar Demandas
+                    <i class="bi bi-filter-left me-2" style="color: var(--cor-teal-principal)"></i>Filtrar Demandas
                 </h5>
                 <div class="row g-3">
                     <div class="col-md-3">
@@ -140,7 +141,7 @@
                             <option value="todos">-- Todos os Bairros --</option>
                             <option value="Centro">Centro</option>
                             <option value="Industrial">Bairro Industrial</option>
-                            <option value="Ipe">Ipê</option>
+                            <option value="Ipê">Ipê</option>
                             <option value="Vila Nova">Vila Nova</option>
                         </select>
                     </div>
@@ -190,7 +191,7 @@
                             </tr>
                         </thead>
                         <tbody id="tbodyOcorrencias" class="small text-muted">
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
                 <div id="semResultados" class="text-center py-5 d-none">
@@ -202,6 +203,46 @@
 
         </div>
     </main>
+
+    <div class="modal fade" id="modalTriagem" tabindex="-1" aria-labelledby="modalTriagemLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header border-bottom-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold text-dark" id="modalTriagemLabel">Triar Demanda</h5>
+                    <button type="button" class="btn-close" data-bs-shadow="none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formModalTriagem">
+                    <div class="modal-body px-4 pb-4">
+                        <input type="hidden" id="modalOcorrenciaId">
+                        <div class="mb-3 bg-light p-3 rounded-3">
+                            <div class="small text-muted mb-1">Protocolo em Análise:</div>
+                            <div class="fw-bold text-dark fs-5" id="modalProtocoloTxt">#SU-000000</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalStatusSelect" class="form-label small fw-semibold text-dark">Atualizar Status:</label>
+                            <select id="modalStatusSelect" class="form-select" required>
+                                <option value="Em Análise">Em Análise</option>
+                                <option value="Em Processo">Em Processo</option>
+                            </select>
+                        </div>
+                        <div class="mb-1">
+                            <label for="modalEquipeSelect" class="form-label small fw-semibold text-dark">Despachar Equipe Operacional:</label>
+                            <select id="modalEquipeSelect" class="form-select">
+                                <option value="">-- Deixar em Espera / Nenhuma --</option>
+                                <option value="Equipe Alpha - Vias">Equipe Alpha - Reparos de Vias</option>
+                                <option value="Equipe Beta - Elétrica">Equipe Beta - Iluminação</option>
+                                <option value="Equipe Gamma - Saneamento">Equipe Gamma - Coleta e Descarte</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top-0 px-4 pb-4">
+                        <button type="button" class="btn btn-light rounded-pill px-3 fw-semibold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-teal rounded-pill px-4 fw-bold">Salvar Despacho</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <footer class="pt-5 pb-4 mt-5">
         <div class="container text-center text-md-start">
@@ -224,7 +265,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             
             // Mock de dados representando as ocorrências no banco de dados da prefeitura
-            const dadosOcorrencias = [
+            let dadosOcorrencias = [
                 { id: "SU-849204", categoria: "Buracos e Vias", bairro: "Centro", dataRaw: new Date(2026, 5, 15), dataFormatada: "15/06/2026", status: "Em Análise", badgeCor: "bg-warning text-dark" },
                 { id: "SU-741093", categoria: "Iluminação Pública", bairro: "Industrial", dataRaw: new Date(2026, 5, 14), dataFormatada: "14/06/2026", status: "Em Processo", badgeCor: "bg-primary text-white" },
                 { id: "SU-512948", categoria: "Lixo e Descarte", bairro: "Ipê", dataRaw: new Date(2026, 5, 10), dataFormatada: "10/06/2026", status: "Em Análise", badgeCor: "bg-warning text-dark" },
@@ -237,6 +278,10 @@
             const btnAtender = document.getElementById('btnAtenderSelecionados');
             const countSelecionados = document.getElementById('countSelecionados');
             const filtros = document.querySelectorAll('.combo-filtro');
+            
+            // Instanciação do modal do Bootstrap para controle programático
+            const modalTriagemElement = document.getElementById('modalTriagem');
+            const bsModalTriagem = new bootstrap.Modal(modalTriagemElement);
 
             // Renderiza as linhas filtradas na tabela
             function renderizarTabela() {
@@ -286,13 +331,14 @@
                             <td>${item.dataFormatada}</td>
                             <td><span class="badge ${item.badgeCor} rounded-pill px-2.5 py-1.5 font-medium" style="font-size:0.75rem;">${item.status}</span></td>
                             <td class="text-end px-4">
-                                <button class="btn btn-outline-teal btn-sm rounded-pill px-3 fw-semibold">Triar Demanda</button>
+                                <button class="btn btn-outline-teal btn-sm rounded-pill px-3 fw-semibold btn-triar" data-id="${item.id}">Triar Demanda</button>
                             </td>
                         `;
                         tbody.appendChild(tr);
                     });
                 }
                 configurarEventosCheckboxes();
+                configurarEventosTriagem();
                 atualizarBotaoAcao();
             }
 
@@ -305,9 +351,9 @@
             }
 
             function atualizarBotaoAcao() {
-                const selecionados = document.querySelectorAll('.item-checkbox:checked').length;
-                countSelecionados.textContent = selecionados;
-                btnAtender.disabled = selecionados === 0;
+                constGridSelecionados = document.querySelectorAll('.item-checkbox:checked').length;
+                countSelecionados.textContent = constGridSelecionados;
+                btnAtender.disabled = constGridSelecionados === 0;
             }
 
             selectAll.addEventListener('change', (e) => {
@@ -318,6 +364,69 @@
 
             // Adiciona gatilhos nos filtros para recarregar em tempo real
             filtros.forEach(f => f.addEventListener('change', renderizarTabela));
+
+            // Configura os botões de ação individual da tabela para abrir o Modal
+            function configurarEventosTriagem() {
+                const botoesTriar = document.querySelectorAll('.btn-triar');
+                botoesTriar.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Evita marcar a linha por engano
+                        const id = btn.getAttribute('data-id');
+                        const ocorrencia = dadosOcorrencias.find(item => item.id === id);
+                        
+                        if (ocorrencia) {
+                            document.getElementById('modalOcorrenciaId').value = ocorrencia.id;
+                            document.getElementById('modalProtocoloTxt').textContent = `#${ocorrencia.id}`;
+                            document.getElementById('modalStatusSelect').value = ocorrencia.status;
+                            document.getElementById('modalEquipeSelect').value = ""; // Limpa a seleção anterior
+                            
+                            bsModalTriagem.show();
+                        }
+                    });
+                });
+            }
+
+            // Processa a atualização individual enviada através do Modal
+            document.getElementById('formModalTriagem').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const id = document.getElementById('modalOcorrenciaId').value;
+                const novoStatus = document.getElementById('modalStatusSelect').value;
+                const equipe = document.getElementById('modalEquipeSelect').value;
+                
+                const ocorrencia = dadosOcorrencias.find(item => item.id === id);
+                if (ocorrencia) {
+                    ocorrencia.status = novoStatus;
+                    ocorrencia.badgeCor = novoStatus === "Em Processo" ? "bg-primary text-white" : "bg-warning text-dark";
+                    
+                    let msg = `Ocorrência #${id} triada com sucesso!\nStatus atualizado para: ${novoStatus}.`;
+                    if (equipe) msg += `\nOrdem de serviço despachada para: ${equipe}.`;
+                    
+                    alert(msg);
+                    bsModalTriagem.hide();
+                    selectAll.checked = false;
+                    renderizarTabela();
+                }
+            });
+
+            // Processa a ação em lote ao clicar no botão "Atender Selecionadas"
+            btnAtender.addEventListener('click', () => {
+                const checkboxesMarcados = document.querySelectorAll('.item-checkbox:checked');
+                let idsAtualizados = [];
+
+                checkboxesMarcados.forEach(chk => {
+                    const id = chk.getAttribute('data-id');
+                    const ocorrencia = dadosOcorrencias.find(item => item.id === id);
+                    if (ocorrencia) {
+                        ocorrencia.status = "Em Processo";
+                        ocorrencia.badgeCor = "bg-primary text-white";
+                        idsAtualizados.push(id);
+                    }
+                });
+
+                alert(`Atendimento em lote iniciado!\n\nAs ocorrências (${idsAtualizados.join(', ')}) foram movidas para o status "Em Processo" e vinculadas ao seu perfil técnico.`);
+                selectAll.checked = false;
+                renderizarTabela();
+            });
 
             // Inicialização padrão da página
             renderizarTabela();

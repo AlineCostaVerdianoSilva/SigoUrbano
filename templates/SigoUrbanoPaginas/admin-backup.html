@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigoUrbano - Backups e Restauração Core</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --cor-teal-principal: #009a96;
+            --cor-teal-escuro: #0a7370;
+            --cor-teal-claro: #e6f5f4;
+            --cor-azul-marinho: #0a2540;
+            --cinza-fundo: #f8f9fa;
+            --cinza-texto: #4a5568;
+            --cinza-borda: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--cinza-texto);
+            background-color: var(--cinza-fundo);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+        
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .card-painel {
+            background: #ffffff;
+            border: 1px solid var(--cinza-borda);
+            border-bottom: 4px solid var(--cinza-borda);
+            border-radius: 12px;
+        }
+
+        .btn-teal {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-teal:hover {
+            background-color: var(--cor-teal-escuro);
+            color: #ffffff;
+        }
+
+        .btn-outline-teal {
+            color: var(--cor-teal-principal);
+            border-color: var(--cor-teal-principal);
+        }
+        .btn-outline-teal:hover {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+        }
+
+        .bg-gradient-seguro {
+            background: linear-gradient(135deg, var(--cor-azul-marinho) 0%, #153e66 100%);
+            color: #ffffff;
+        }
+
+        .table > :not(caption) > * > * {
+            padding: 14px 16px;
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--cor-teal-principal);
+            background-color: var(--cor-teal-claro);
+            border-radius: 8px;
+            text-align: center;
+            padding: 30px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .drop-zone:hover {
+            background-color: #d1f0ed;
+        }
+
+        footer {
+            background-color: var(--cor-azul-marinho);
+            color: #e2e8f0;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="dashboard-admin.html">
+                    <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                    <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="dashboard-admin.html">Painel Root</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="gerenciar-clientes.html">Prefeituras</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold active" href="backups.html" style="color: var(--cor-teal-principal) !important;">Backups e Restauração</a></li>
+                        <li class="nav-item ms-2"><a class="btn btn-outline-danger btn-sm rounded-pill px-3" href="login.html"><i class="bi bi-box-arrow-right me-1"></i>Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="py-5">
+        <div class="container">
+            
+            <div class="row mb-4">
+                <div class="col">
+                    <span class="badge bg-danger text-white rounded-pill px-3 py-2 mb-2 fw-semibold d-inline-block">
+                        <i class="bi bi-shield-fill-check me-1"></i> Segurança da Infraestrutura SaaS
+                    </span>
+                    <h1 class="fw-bold text-dark h2">Políticas de Backup e Salvaguarda</h1>
+                    <p class="text-muted">Criação manual instantânea em conformidade com o requisito RNF13 e histórico estruturado de snapshots lógicos.</p>
+                </div>
+            </div>
+
+            <div id="alertFeedbackBackup" class="alert alert-success alert-dismissible fade show d-none rounded-3 shadow-sm" role="alert">
+                <i class="bi bi-cloud-arrow-down-fill me-2"></i> <span id="textFeedbackBackup">Procedimento concluído com sucesso.</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="row g-4 mb-5">
+                
+                <div class="col-lg-6">
+                    <div class="card-painel p-4 h-100 bg-gradient-seguro shadow-sm d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h2 class="h5 fw-bold text-white mb-0">Exportação Instantânea (RNF13)</h2>
+                                <span class="badge bg-teal-principal text-white px-2 py-1 fs-8">1-Click Action</span>
+                            </div>
+                            <p class="text-white-50 small">Dispare imediatamente um despejo completo do banco de dados relacional multi-tenant (tabelas de ocorrências, usuários municipais e parametrizações contratuais).</p>
+                            
+                            <div class="my-4">
+                                <label class="form-label small fw-bold text-white mb-2">Formato de Saída Estruturado:</label>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="formatoExportacao" id="fmtJson" value="JSON" checked>
+                                        <label class="form-check-label small text-white" for="fmtJson">
+                                            <i class="bi bi-filetype-json text-warning me-1"></i> JavaScript Object Notation (.JSON)
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="formatoExportacao" id="fmtXml" value="XML">
+                                        <label class="form-check-label small text-white" for="fmtXml">
+                                            <i class="bi bi-filetype-xml text-info me-1"></i> Extensible Markup Language (.XML)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button id="btnDispararBackup" onclick="dispararBackupUmClique()" class="btn btn-teal w-100 py-3 rounded-3 fw-bold shadow-sm mt-3">
+                                <i class="bi bi-lightning-charge-fill me-1"></i> Gerar e Baixar Snapshot Agora
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card-painel p-4 h-100 bg-white shadow-sm d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h2 class="h5 fw-bold text-dark mb-0">Restaurar Ponto de Recuperação</h2>
+                                <i class="bi bi-arrow-counterclockwise text-muted fs-5"></i>
+                            </div>
+                            <p class="text-muted small">Alimente o parser core do SigoUrbano com um arquivo estruturado JSON ou XML anteriormente gerado. **Aviso técnico:** Esta operação irá sobrepor os dados atuais do cluster.</p>
+                            
+                            <div class="drop-zone my-3" onclick="document.getElementById('inputRestaurarFile').click()">
+                                <i class="bi bi-cloud-upload text-teal-principal fs-2 mb-2 d-block" style="color: var(--cor-teal-principal)"></i>
+                                <span class="small fw-semibold text-dark">Arraste ou clique para selecionar o dump (.json ou .xml)</span>
+                                <input type="file" id="inputRestaurarFile" class="d-none" accept=".json,.xml" onchange="detectarArquivoRestauracao()">
+                            </div>
+                            <div id="fileSelectedBadge" class="text-start small mb-2 d-none">
+                                <span class="badge bg-secondary p-2"><i class="bi bi-file-earmark-code me-1"></i> <span id="fileNamePlace">nome.json</span></span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button id="btnRestaurarBackup" onclick="abrirConfirmacaoRestauracao()" class="btn btn-dark w-100 py-3 rounded-3 fw-bold shadow-sm" disabled>
+                                <i class="bi bi-database-fill-up me-1"></i> Aplicar e Substituir Tabelas
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-painel bg-white shadow-sm p-4">
+                        <h3 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-4"><i class="bi bi-clock-history me-2 text-muted"></i>Registro de Logs e Logs de Despejo</h3>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light text-uppercase fs-7">
+                                    <tr>
+                                        <th scope="col" class="text-dark fw-bold" style="width: 25%">Data / Registro</th>
+                                        <th scope="col" class="text-dark fw-bold" style="width: 15%">Formato</th>
+                                        <th scope="col" class="text-dark fw-bold" style="width: 15%">Tamanho</th>
+                                        <th scope="col" class="text-dark fw-bold" style="width: 20%">Responsável</th>
+                                        <th scope="col" class="text-dark fw-bold" style="width: 15%">Escopo</th>
+                                        <th scope="col" class="text-dark fw-bold text-end" style="width: 10%">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-bold text-dark">22/06/2026 - 02:15<span class="text-muted d-block small font-monospace fs-8">hash_id: bkp_98452140_cluster</span></td>
+                                        <td><span class="badge bg-warning-subtle text-warning-dark border border-warning px-2 py-1 small fw-bold">JSON</span></td>
+                                        <td class="small text-muted">142.8 MB</td>
+                                        <td class="small">Sistema (Automático Semanal)</td>
+                                        <td><span class="small text-secondary"><i class="bi bi-hdd-stack me-1"></i>Full Cluster</span></td>
+                                        <td class="text-end"><button onclick="baixarBackupMocado('bkp_98452140_cluster.json')" class="btn btn-sm btn-outline-dark rounded-pill px-3 py-1"><i class="bi bi-download"></i></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-dark">15/06/2026 - 02:00<span class="text-muted d-block small font-monospace fs-8">hash_id: bkp_81235122_cluster</span></td>
+                                        <td><span class="badge bg-warning-subtle text-warning-dark border border-warning px-2 py-1 small fw-bold">JSON</span></td>
+                                        <td class="small text-muted">141.2 MB</td>
+                                        <td class="small">Sistema (Automático Semanal)</td>
+                                        <td><span class="small text-secondary"><i class="bi bi-hdd-stack me-1"></i>Full Cluster</span></td>
+                                        <td class="text-end"><button onclick="baixarBackupMocado('bkp_81235122_cluster.json')" class="btn btn-sm btn-outline-dark rounded-pill px-3 py-1"><i class="bi bi-download"></i></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-dark">01/06/2026 - 11:34<span class="text-muted d-block small font-monospace fs-8">hash_id: bkp_44215901_manual</span></td>
+                                        <td><span class="badge bg-info-subtle text-info-dark border border-info px-2 py-1 small fw-bold">XML</span></td>
+                                        <td class="small text-muted">189.5 MB</td>
+                                        <td class="small">admin.root@sigourbano.com</td>
+                                        <td><span class="small text-secondary"><i class="bi bi-hdd-stack me-1"></i>Full Cluster</span></td>
+                                        <td class="text-end"><button onclick="baixarBackupMocado('bkp_44215901_manual.xml')" class="btn btn-sm btn-outline-dark rounded-pill px-3 py-1"><i class="bi bi-download"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div class="modal fade" id="modalConfirmarRestauração" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-body p-4 text-center">
+                    <i class="bi bi-exclamation-triangle-fill text-danger fs-1 mb-3 d-block"></i>
+                    <h5 class="fw-bold text-dark">Sobrescrever Banco de Dados Central?</h5>
+                    <p class="text-muted small">Esta ação interromperá as sessões ativas de todos os gestores, cidadãos e fiscais do ecossistema. As tabelas serão reestruturadas para o ponto de recuperação fornecido.</p>
+                    
+                    <div class="bg-light p-3 rounded-3 my-3 text-start border fs-8">
+                        <strong>Arquivo selecionado:</strong> <span id="modalFileName">dump.json</span><br>
+                        <strong>Escopo inferido:</strong> Full Schema Multi-Tenant
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-2 mt-4">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Abortar</button>
+                        <button type="button" onclick="executarRestauraçãoFinal()" class="btn btn-danger rounded-pill px-4 fw-bold">Proceder com a Restauração</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h5 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <img src="logo_cor.png" alt="SigoUrbano" class="me-2" style="height:30px; width:auto;"> SigoUrbano
+                    </h5>
+                    <p class="small text-white-50">Cluster Core - Alta disponibilidade e governança estrutural de dados públicos e privados.</p>
+                </div>
+                <div class="col-md-7 text-center text-md-end align-self-center">
+                    <p class="text-white-50 small mb-0">&copy; 2026 SigoUrbano Security Core. Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const modalConfirmacao = new bootstrap.Modal(document.getElementById('modalConfirmarRestauração'));
+
+        // Caso de Uso: RNF13 - Backup em Um Clique (Simulação de empacotamento e download)
+        function dispararBackupUmClique() {
+            const btn = document.getElementById('btnDispararBackup');
+            const formato = document.querySelector('input[name="formatoExportacao"]:checked').value;
+            
+            // Estado de carregamento visual
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status"></span> Compilando Tabelas em ${formato}...`;
+
+            setTimeout(() => {
+                // Restaura o botão
+                btn.disabled = false;
+                btn.innerHTML = `<i class="bi bi-lightning-charge-fill me-1"></i> Gerar e Baixar Snapshot Agora`;
+                
+                // Dispara feedback de sucesso em tela
+                const alertBox = document.getElementById('alertFeedbackBackup');
+                document.getElementById('textFeedbackBackup').innerHTML = `<strong>Sucesso (RNF13)!</strong> O download do arquivo de contingência <code>sigourbano_snapshot_${formato.toLowerCase()}.json</code> foi iniciado automaticamente em formato estruturado.`;
+                alertBox.classList.remove('d-none');
+                
+                // Rolagem fluida para visualização do feedback
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Emulação de download do arquivo físico estruturado
+                alert(`SigoUrbano Core: Download do arquivo estruturado [${formato}] iniciado.`);
+            }, 1800);
+        }
+
+        // Listener reativo do input de arquivo para restaurar dados
+        function detectarArquivoRestauracao() {
+            const fileInput = document.getElementById('inputRestaurarFile');
+            const badge = document.getElementById('fileSelectedBadge');
+            const namePlace = document.getElementById('fileNamePlace');
+            const btnRestaurar = document.getElementById('btnRestaurarBackup');
+
+            if (fileInput.files.length > 0) {
+                const arquivo = fileInput.files[0].name;
+                namePlace.textContent = arquivo;
+                badge.classList.remove('d-none');
+                btnRestaurar.disabled = false; // Libera o botão de ação
+            }
+        }
+
+        // Caso de Uso: Restaurar Backup - Passo 1
+        function abrirConfirmacaoRestauracao() {
+            const nomeArquivo = document.getElementById('inputRestaurarFile').files[0].name;
+            document.getElementById('modalFileName').textContent = nomeArquivo;
+            modalConfirmacao.show();
+        }
+
+        // Caso de Uso: Restaurar Backup - Passo 2 (Finalização)
+        function executarRestauraçãoFinal() {
+            modalConfirmacao.hide();
+            const btn = document.getElementById('btnRestaurarBackup');
+            
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status"></span> Processando tabelas lógicas...`;
+
+            setTimeout(() => {
+                btn.innerHTML = `<i class="bi bi-database-fill-up me-1"></i> Aplicar e Substituir Tabelas`;
+                
+                // Limpeza do input de arquivos
+                document.getElementById('inputRestaurarFile').value = "";
+                document.getElementById('fileSelectedBadge').add('d-none');
+                
+                const alertBox = document.getElementById('alertFeedbackBackup');
+                document.getElementById('textFeedbackBackup').innerHTML = `<strong>Restauração Concluída!</strong> O parser core concluiu a substituição de dados. O ecossistema SigoUrbano foi reestabelecido para o ponto de integridade selecionado.`;
+                alertBox.classList.remove('d-none');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 2500);
+        }
+
+        // Função utilitária para baixar registros antigos do log
+        function baixarBackupMocado(nomeBkp) {
+            alert(`Iniciando download do arquivo de histórico armazenado em Cold Storage: ${nomeBkp}`);
+        }
+    </script>
+</body>
+</html>

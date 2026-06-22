@@ -125,10 +125,38 @@ Aqui está o código completo da página **"Registrar Ocorrência"**, desenhado 
             padding: 2rem;
             text-align: center;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
         }
-        .upload-dropzone:hover {
-            background-color: #d6f0ee;
+        .upload-dropzone.dragover {
+            background-color: #bee3e1;
+            border-color: var(--cor-teal-escuro);
+        }
+
+        /* Estilo para miniaturas das fotos anexadas */
+        .preview-thumb {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid var(--cinza-borda);
+        }
+        .thumb-container {
+            position: relative;
+            display: inline-block;
+        }
+        .btn-remove-thumb {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            line-height: 1;
+            cursor: pointer;
         }
 
         /* Rodapé */
@@ -143,8 +171,8 @@ Aqui está o código completo da página **"Registrar Ocorrência"**, desenhado 
     <header>
         <nav class="navbar navbar-expand-lg fixed-top shadow-sm">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="#">
-                    <img src="C:\Users\20231imi037\Documents\implementaçaosigourbano\SigoUrbano\templates\SigoUrbanoPaginas\logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="index.html">
+                    <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
                     <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -152,12 +180,12 @@ Aqui está o código completo da página **"Registrar Ocorrência"**, desenhado 
                 </button>
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav ms-auto align-items-center">
-                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Painel Inicial</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold active text-teal" href="#" style="color: var(--cor-teal-principal) !important;">Registrar Ocorrência</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#">Meus Chamados</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="index.html">Painel Inicial</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold active text-teal" href="registrar.html" style="color: var(--cor-teal-principal) !important;">Registrar Ocorrência</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="meus-chamados.html">Meus Chamados</a></li>
                         <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
                             <span class="text-muted small me-2">Olá, Cidadão</span>
-                            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3">Sair</button>
+                            <a class="btn btn-outline-secondary btn-sm rounded-pill px-3" href="login.html">Sair</a>
                         </li>
                     </ul>
                 </div>
@@ -179,7 +207,7 @@ Aqui está o código completo da página **"Registrar Ocorrência"**, desenhado 
         </div>
     </section>
 
-    <main class="py-5 bg-light">
+    <main class="py-5 bg-light" id="mainContentArea">
         <div class="container">
             <form id="formOcorrenciaPrincipal" class="needs-validation" novalidate>
                 <div class="row g-4">
@@ -194,10 +222,10 @@ Aqui está o código completo da página **"Registrar Ocorrência"**, desenhado 
                                 <label for="categoria" class="form-label">Categoria do Incidente</label>
                                 <select id="categoria" class="form-select" required>
                                     <option value="" selected disabled>Escolha uma categoria...</option>
-                                    <option value="vias">Buracos e Vias Urbanas</option>
-                                    <option value="iluminacao">Iluminação Pública</option>
-                                    <option value="lixo">Lixo e Descarte Irregular</option>
-                                    <option value="alagamento">Alagamentos e Bueiros</option>
+                                    <option value="Buracos e Vias Urbanas">Buracos e Vias Urbanas</option>
+                                    <option value="Iluminação Pública">Iluminação Pública</option>
+                                    <option value="Lixo e Descarte Irregular">Lixo e Descarte Irregular</option>
+                                    <option value="Alagamentos e Bueiros">Alagamentos e Bueiros</option>
                                 </select>
                                 <div class="invalid-feedback">A seleção da categoria é obrigatória.</div>
                             </div>
@@ -210,13 +238,13 @@ Aqui está o código completo da página **"Registrar Ocorrência"**, desenhado 
 
                             <div class="mb-2">
                                 <label class="form-label">Anexar Evidências Fotográficas (RF7)</label>
-                                <div class="upload-dropzone" onclick="document.getElementById('inputFotos').click()">
+                                <div class="upload-dropzone" id="dropzoneArea">
                                     <i class="bi bi-images fs-2" style="color: var(--cor-teal-principal)"></i>
-                                    <h6 class="fw-bold mt-2 mb-1 text-dark" style="font-size: 0.95rem;">Clique para selecionar arquivos</h6>
+                                    <h6 class="fw-bold mt-2 mb-1 text-dark" style="font-size: 0.95rem;">Clique ou arraste arquivos aqui</h6>
                                     <p class="text-muted small mb-0">Formatos suportados: PNG, JPG (Máx. 5MB por imagem)</p>
                                     <input type="file" id="inputFotos" class="d-none" accept="image/*" multiple>
                                 </div>
-                                <div id="containerListaFotos" class="mt-2 small text-success fw-semibold"></div>
+                                <div id="containerListaFotos" class="mt-3 d-flex flex-wrap gap-2"></div>
                             </div>
                         </div>
                     </div>
@@ -253,7 +281,7 @@ Aqui está o código completo da página **"Registrar Ocorrência"**, desenhado 
 
                 <div class="row mt-4">
                     <div class="col-12 text-end">
-                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4 py-2 me-2">Cancelar</button>
+                        <a href="index.html" class="btn btn-outline-secondary rounded-pill px-4 py-2 me-2">Cancelar</a>
                         <button type="submit" class="btn btn-teal rounded-pill px-5 py-2 fw-bold shadow-sm">
                             <i class="bi bi-check2-circle me-2"></i>Protocolar Ocorrência
                         </button>
@@ -275,8 +303,8 @@ Aqui está o código completo da página **"Registrar Ocorrência"**, desenhado 
                 <div class="col-md-3 text-center">
                     <h5 class="fw-bold text-white mb-3 small text-uppercase tracking-wider">Transparência</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="text-white-50 text-decoration-none small d-block mb-2">Segurança de Dados (LGPD)</a></li>
-                        <li><a href="#" class="text-white-50 text-decoration-none small d-block mb-2">Lei de Acesso à Informação</a></li>
+                        <li><a href="lgpd.html" class="text-white-50 text-decoration-none small d-block mb-2">Segurança de Dados (LGPD)</a></li>
+                        <li><a href="lai.html" class="text-white-50 text-decoration-none small d-block mb-2">Lei de Acesso à Informação</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 text-center text-md-end">
@@ -300,48 +328,129 @@ Aqui está o código completo da página **"Registrar Ocorrência"**, desenhado 
             'use strict'
             const form = document.getElementById('formOcorrenciaPrincipal');
             const inputFotos = document.getElementById('inputFotos');
+            const dropzoneArea = document.getElementById('dropzoneArea');
             const containerListaFotos = document.getElementById('containerListaFotos');
             const btnLocalizarGps = document.getElementById('btnLocalizarGps');
             const campoEndereco = document.getElementById('endereco');
+            const mainContentArea = document.getElementById('mainContentArea');
 
-            // Feedback Visual de Arquivos Selecionados
+            let listaArquivosAcumulados = [];
+
+            // Disparar seletor ao clicar na dropzone
+            dropzoneArea.addEventListener('click', () => inputFotos.click());
+
+            // Funções de Arrastar e Soltar (Drag & Drop)
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzoneArea.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropzoneArea.classList.add('dragover');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzoneArea.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropzoneArea.classList.remove('dragover');
+                }, false);
+            });
+
+            dropzoneArea.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                processarArquivos(files);
+            });
+
             inputFotos.addEventListener('change', () => {
-                if (inputFotos.files.length > 0) {
-                    containerListaFotos.innerHTML = `<i class="bi bi-paperclip"></i> Pronto para upload: ${inputFotos.files.length} imagem(ns) anexada(s).`;
-                } else {
-                    containerListaFotos.innerHTML = '';
+                processarArquivos(inputFotos.files);
+            });
+
+            // Processa arquivos e renderiza miniaturas reais
+            function processarArquivos(files) {
+                for (let i = 0; i < files.length; i++) {
+                    if (files[i].type.startsWith('image/')) {
+                        listaArquivosAcumulados.push(files[i]);
+                        
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const index = listaArquivosAcumulados.length - 1;
+                            const container = document.createElement('div');
+                            container.className = 'thumb-container';
+                            container.id = `thumb-${index}`;
+                            container.innerHTML = `
+                                <img src="${e.target.result}" class="preview-thumb" alt="Miniatura">
+                                <button type="button" class="btn-remove-thumb" data-index="${index}">&times;</button>
+                            `;
+                            containerListaFotos.appendChild(container);
+                        }
+                        reader.readAsDataURL(files[i]);
+                    }
+                }
+            }
+
+            // Remover miniatura da lista
+            containerListaFotos.addEventListener('click', (e) => {
+                if (e.target.classList.contains('btn-remove-thumb')) {
+                    const idx = e.target.getAttribute('data-index');
+                    document.getElementById(`thumb-${idx}`).remove();
+                    listaArquivosAcumulados[idx] = null; // desativa o arquivo do payload simulado
                 }
             });
 
-            // Simulação de Coleta de Coordenadas de GPS
+            // Simulação Avançada de Coleta de Coordenadas de GPS
             btnLocalizarGps.addEventListener('click', () => {
-                btnLocalizarGps.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Buscando...';
+                btnLocalizarGps.disabled = true;
+                btnLocalizarGps.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Localizando...';
+                
                 setTimeout(() => {
-                    campoEndereco.value = "Avenida Governador Lacerda, Centro - Setor Comercial (Via GPS)";
-                    btnLocalizarGps.innerHTML = '<i class="bi bi-check-lg text-success"></i> Fixado';
-                }, 1100);
+                    campoEndereco.value = "Avenida Governador Lacerda, 450 - Centro Comercial (Capturado via GPS)";
+                    btnLocalizarGps.innerHTML = '<i class="bi bi-check-lg text-success"></i> Localizado';
+                    btnLocalizarGps.className = "btn btn-light border px-3";
+                }, 1200);
             });
 
-            // Validação unificada Bootstrap 5
+            // Validação e Geração de Tela de Sucesso Dinâmica
             form.addEventListener('submit', event => {
                 if (!form.checkValidity()) {
                     event.preventDefault();
                     event.stopPropagation();
+                    form.classList.add('was-validated');
                 } else {
                     event.preventDefault();
                     
+                    const categoriaSelecionada = document.getElementById('categoria').value;
+                    const enderecoInformado = campoEndereco.value;
                     const ticketProtocolo = "SU-" + Math.floor(100000 + Math.random() * 900000);
-                    alert(`Ocorrência protocolada com sucesso!\n\nNúmero do Chamado: ${ticketProtocolo}\nStatus: Triagem Inicial Automática.`);
-                    
-                    form.reset();
-                    containerListaFotos.innerHTML = '';
-                    form.classList.remove('was-validated');
+                    const dataAtual = new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+
+                    // Substitui dinamicamente o formulário por um painel de sucesso limpo e moderno
+                    mainContentArea.innerHTML = `
+                        <div class="container py-4">
+                            <div class="row justify-content-center">
+                                <div class="col-md-8 col-lg-6 text-center">
+                                    <div class="p-5 bg-white rounded-3 shadow border-bottom border-4 border-success">
+                                        <i class="bi bi-shield-check text-success display-1 mb-3"></i>
+                                        <h2 class="fw-bold text-dark h3 mb-2">Protocolo Emitido com Sucesso!</h2>
+                                        <p class="text-muted mb-4">Sua solicitação foi registrada e encaminhada para a triagem automatizada de zeladoria urbana.</p>
+                                        
+                                        <div class="bg-light p-3 rounded text-start mb-4 border">
+                                            <div class="mb-1 small"><strong>Código do Chamado:</strong> <span class="text-teal fw-bold" style="color: var(--cor-teal-principal)">${ticketProtocolo}</span></div>
+                                            <div class="mb-1 small"><strong>Serviço solicitado:</strong> ${categoriaSelecionada}</div>
+                                            <div class="mb-1 small"><strong>Local apontado:</strong> ${enderecoInformado}</div>
+                                            <div class="small"><strong>Data de abertura:</strong> ${dataAtual}</div>
+                                        </div>
+
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <a href="meus-chamados.html" class="btn btn-teal rounded-pill px-4 fw-bold">Acompanhar Chamados</a>
+                                            <button onclick="window.location.reload()" class="btn btn-outline-secondary rounded-pill px-3">Novo Registro</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 }
-                form.classList.add('was-validated');
             }, false);
         })();
     </script>
 </body>
 </html>
-
-```

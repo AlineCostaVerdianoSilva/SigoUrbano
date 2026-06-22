@@ -113,7 +113,7 @@
         <div class="card card-login">
             
             <div class="card-header-custom">
-                <img src="lC:\Users\20231imi037\Documents\implementaçaosigourbano\SigoUrbano\templates\SigoUrbanoPaginas\logo_cor.png" alt="SigoUrbano Logo" class="logo-img">
+                <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img">
                 <h1 class="h4 fw-bold mb-1">
                     <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
                 </h1>
@@ -135,11 +135,11 @@
                     <div class="mb-2">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <label for="senha" class="form-label small fw-semibold text-muted mb-0">Senha de Acesso</label>
-                            <a href="#" class="small link-teal" style="font-size: 0.8rem;">Esqueceu a senha?</a>
+                            <a href="recuperar-senha.html" class="small link-teal" style="font-size: 0.8rem;">Esqueceu a senha?</a>
                         </div>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                            <input type="password" id="senha" class="form-control" placeholder="••••••••" required autocomplete="current-senha">
+                            <input type="password" id="senha" class="form-control" placeholder="••••••••" required autocomplete="current-password">
                         </div>
                     </div>
 
@@ -153,7 +153,7 @@
                     </button>
                     
                     <div class="text-center mt-3">
-                        <p class="small text-muted mb-0">Ainda não possui uma conta? <a href="#" class="link-teal">Cadastre-se aqui</a></p>
+                        <p class="small text-muted mb-0">Ainda não possui uma account? <a href="index.html" class="link-teal">Voltar para o início</a></p>
                     </div>
 
                 </form>
@@ -168,10 +168,16 @@
         document.getElementById('formAutenticacao').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.toLowerCase();
             
-            // Simulação básica da base de controle de acesso por perfil
-            alert(`Autenticação bem-sucedida!\n\nPerfil Ativo: Usuário Cidadão\nIdentificação: ${email}\n\nDirecionando para o painel de ocorrências urbanas...`);
+            // Lógica de Redirecionamento Baseada no E-mail Digitado
+            if (email.includes('gestor')) {
+                window.location.href = 'painel-gestor.html';
+            } else if (email.includes('fiscal')) {
+                window.location.href = 'painel-fiscal.html';
+            } else {
+                window.location.href = 'index.html';
+            }
         });
     </script>
 </body>

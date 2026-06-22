@@ -116,7 +116,7 @@
                 <div class="card-cadastro">
                     
                     <div class="brand-header">
-                        <img src="C:\Users\20231imi037\Documents\implementaçaosigourbano\SigoUrbano\templates\SigoUrbanoPaginas\logo_cor.png" alt="SigoUrbano Logo" class="logo-img">
+                        <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img">
                         <h1 class="h4 fw-bold mb-1">
                             <span style="color: var(--cor-teal)">Sigo</span><span style="color: var(--cor-marinho)">Urbano</span>
                         </h1>
@@ -172,7 +172,7 @@
                                 <div class="form-check mt-3">
                                     <input class="form-check-input" type="checkbox" id="checkLgpd" required>
                                     <label class="form-check-label small text-dark" for="checkLgpd">
-                                        Estou ciente e autorizo o SigoUrbano a processar os meus dados para fins de gestão de solicitações urbanas conforme a LGPD.
+                                        Estoy ciente e autorizo o SigoUrbano a processar os meus dados para fins de gestão de solicitações urbanas conforme a LGPD.
                                     </label>
                                     <div class="invalid-feedback" style="font-size: 0.75rem;">Você precisa aceitar os termos de uso de dados para prosseguir.</div>
                                 </div>
@@ -183,7 +183,7 @@
                             </button>
 
                             <div class="text-center">
-                                <p class="small mb-0 text-muted">Já possui cadastro? <a href="#" class="link-marinho">Fazer Login</a></p>
+                                <p class="small mb-0 text-muted">Já possui cadastro? <a href="login.html" class="link-marinho">Fazer Login</a></p>
                             </div>
 
                         </form>
@@ -219,7 +219,10 @@
                     event.preventDefault();
                     
                     // Simulação bem-sucedida do Caso de Uso RF1
-                    alert('Conta criada com sucesso!\n\nSeu perfil de usuário foi ativado para o escopo RF1.\nRedirecionando para o painel de criação e acompanhamento de ocorrências.');
+                    alert('Conta criada com sucesso!\n\nSeu perfil de usuário foi ativado para o escopo RF1.\nRedirecionando para o painel de criação e acompanhamento de ocorrências...');
+                    
+                    // Redireciona o novo cidadão diretamente para o portal principal/dashboard do cidadão
+                    window.location.href = 'index.html';
                 }
 
                 form.classList.add('was-validated');

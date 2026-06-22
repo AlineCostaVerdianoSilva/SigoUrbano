@@ -11,7 +11,7 @@
         :root {
             --cor-teal-principal: #009a96;   /* Verde-água da logo */
             --cor-teal-escuro: #0a7370;      /* Tom mais escuro para hovers */
-            --cor-teal-claro: #e6f5f4;       /* Fundo suave para blocos de destaque */
+            --cor-teal-claro: #e6f5f4;       /* Fundo suave para blocks de destaque */
             --cor-azul-marinho: #0a2540;     /* Azul Marinho Elegante para substituição do Laranja */
             --cor-azul-marinho-hover: #06182b;
             --cinza-fundo: #f8f9fa;          /* Fundo neutro e moderno */
@@ -49,6 +49,10 @@
             background-color: var(--cor-teal-principal);
             color: #ffffff;
             border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-teal:hover {
             background-color: var(--cor-teal-escuro);
@@ -144,8 +148,8 @@
                         <li class="nav-item"><a class="nav-link text-dark px-3" href="#planos">Planos</a></li>
                         <li class="nav-item"><a class="nav-link text-dark px-3" href="#equipe">Nossa Equipe</a></li>
                         <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
-                            <button class="btn btn-outline-secondary btn-sm rounded-pill px-4 me-2" data-bs-toggle="modal" data-bs-target="#modalLogin">Entrar</button>
-                            <button class="btn btn-teal btn-sm rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#modalCadastro">Cadastrar-se</button>
+                            <a href="login.html" class="btn btn-outline-secondary btn-sm rounded-pill px-4 me-2">Entrar</a>
+                            <a href="cadastro.html" class="btn btn-teal btn-sm rounded-pill px-4">Cadastrar-se</a>
                         </li>
                     </ul>
                 </div>
@@ -163,9 +167,9 @@
                     <h1 class="display-4 fw-bold mb-3">Sua cidade mais inteligente, problemas urbanos resolvidos.</h1>
                     <p class="lead mb-4 opacity-90">Uma plataforma integrada para governos municipais e cidadãos. Relate, acompanhe e audite a manutenção de vias, iluminação e saneamento em tempo real.</p>
                     <div class="d-grid d-md-flex gap-3 justify-content-center justify-content-lg-start">
-                        <button class="btn btn-teal btn-lg fw-bold px-4 py-3 rounded-pill shadow" data-bs-toggle="modal" data-bs-target="#modalCadastro">
-                            <i class="bi bi-megaphone-fill me-2"></i>Registrar Ocorrência
-                        </button>
+                        <a href="registrar-ocorrencia.html" class="btn btn-teal btn-lg fw-bold px-4 py-3 rounded-pill shadow">
+    <i class="bi bi-megaphone-fill me-2"></i>Registrar Ocorrência
+</a>
                         <a href="#planos" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill">
                             Ver Planos Governamentais
                         </a>
@@ -238,7 +242,7 @@
                         <div class="me-3" style="color: var(--cor-teal-principal)"><i class="bi bi-geo-alt-fill fs-3"></i></div>
                         <div>
                             <h5 class="fw-bold text-dark h6">Geolocalização Automatizada</h5>
-                            <p class="text-muted small">O cidadão fotografa o problema e o sistema extrai automaticamente as coordenadas geográficas exatas para guiar a equipe de campo.</p>
+                            <p class="text-muted small">O cidadão fotografa o problem e o sistema extrai automaticamente as coordenadas geográficas exatas para guiar a equipe de campo.</p>
                         </div>
                     </div>
                     
@@ -387,71 +391,6 @@
         </div>
     </footer>
 
-    <div class="modal fade" id="modalLogin" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header border-bottom-0">
-                    <h5 class="modal-title fw-bold text-dark"><i class="bi bi-lock-fill me-2" style="color:var(--cor-teal-principal)"></i>Acessar Sistema</h5>
-                    <button type="button" class="btn-close" data-bs-close="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formLogin">
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-muted">E-mail Cadastrado</label>
-                            <input type="email" class="form-control" placeholder="exemplo@email.com" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-muted">Senha</label>
-                            <input type="password" class="form-control" placeholder="••••••••" required>
-                        </div>
-                        <button type="submit" class="btn btn-teal w-100 rounded-pill py-2 mt-2">Entrar na Plataforma</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modalCadastro" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header border-bottom-0">
-                    <h5 class="modal-title fw-bold text-dark"><i class="bi bi-person-plus-fill me-2" style="color:var(--cor-azul-marinho)"></i>Criar Conta Cidadão</h5>
-                    <button type="button" class="btn-close" data-bs-close="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formCadastro">
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-muted">Nome Completo</label>
-                            <input type="text" class="form-control" placeholder="Seu nome" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-muted">CPF</label>
-                            <input type="text" class="form-control" placeholder="000.000.000-00" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-muted">E-mail</label>
-                            <input type="email" class="form-control" placeholder="seu@email.com" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-muted">Crie uma Senha</label>
-                            <input type="password" class="form-control" placeholder="Mínimo 6 caracteres" required>
-                        </div>
-                        <button type="submit" class="btn btn-marinho w-100 rounded-pill py-2 mt-2">Concluir Registro</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Mocks de envio
-        document.getElementById('formLogin').addEventListener('submit', (e) => {
-            e.preventDefault(); alert('Acesso simulado com sucesso na infraestrutura SigoUrbano!');
-        });
-        document.getElementById('formCadastro').addEventListener('submit', (e) => {
-            e.preventDefault(); alert('Cadastro de cidadão processado com sucesso!');
-        });
-    </script>
 </body>
 </html>

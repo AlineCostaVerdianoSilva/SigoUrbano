@@ -143,7 +143,7 @@
         <div class="card-recuperacao">
             
             <div class="brand-header">
-                <img src="C:\Users\20231imi037\Documents\implementaçaosigourbano\SigoUrbano\templates\SigoUrbanoPaginas\logo_cor.png" alt="SigoUrbano Logo" class="logo-img">
+                <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img">
                 <h1 class="h4 fw-bold mb-1">
                     <span style="color: var(--cor-teal)">Sigo</span><span style="color: var(--cor-marinho)">Urbano</span>
                 </h1>
@@ -180,8 +180,8 @@
                     </button>
 
                     <div class="text-center d-flex justify-content-between border-top pt-3 small">
-                        <a href="#" class="link-marinho"><i class="bi bi-arrow-left me-1"></i>Voltar para o Login</a>
-                        <a href="#" class="link-marinho">Criar nova conta</a>
+                        <a href="login.html" class="link-marinho"><i class="bi bi-arrow-left me-1"></i>Voltar para o Login</a>
+                        <a href="cadastro.html" class="link-marinho">Criar nova conta</a>
                     </div>
 
                 </form>
@@ -205,6 +205,9 @@
                     
                     const emailInserido = document.getElementById('email').value;
                     alert(`Instruções enviadas!\n\nUm e-mail com as diretrizes e o link de redefinição segura foi encaminhado para:\n${emailInserido}\n\nVerifique a sua caixa de entrada ou spam.`);
+                    
+                    // Redireciona de volta para a página de login para o usuário acessar o sistema após redefinir
+                    window.location.href = 'login.html';
                 }
 
                 form.classList.add('was-validated');

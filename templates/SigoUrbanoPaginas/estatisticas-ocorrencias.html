@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigoUrbano - Relatórios Estatísticos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --cor-teal-principal: #009a96;
+            --cor-teal-escuro: #0a7370;
+            --cor-teal-claro: #e6f5f4;
+            --cor-azul-marinho: #0a2540;
+            --cinza-fundo: #f8f9fa;
+            --cinza-texto: #4a5568;
+            --cinza-borda: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--cinza-texto);
+            background-color: var(--cinza-fundo);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+        
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .card-relatorio {
+            background: #ffffff;
+            border: 1px solid var(--cinza-borda);
+            border-bottom: 4px solid var(--cinza-borda);
+            border-radius: 12px;
+        }
+
+        .btn-teal {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-teal:hover {
+            background-color: var(--cor-teal-escuro);
+            color: #ffffff;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 260px;
+            width: 100%;
+        }
+
+        footer {
+            background-color: var(--cor-azul-marinho);
+            color: #e2e8f0;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="dashboard-gestor.html">
+                    <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                    <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="dashboard-gestor.html">Painel Executivo</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold active" href="relatorios-estatisticos.html" style="color: var(--cor-teal-principal) !important;">Relatórios e Planejamento</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="mapa.html">Mapa Estratégico</a></li>
+                        <li class="nav-item ms-2"><a class="btn btn-outline-danger btn-sm rounded-pill px-3" href="login.html"><i class="bi bi-box-arrow-right me-1"></i>Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="py-5">
+        <div class="container">
+            
+            <div class="row mb-4 align-items-center">
+                <div class="col-md-7">
+                    <h1 class="fw-bold text-dark h2">Análise Transversal de Ocorrências</h1>
+                    <p class="text-muted mb-0">Dados consolidados e históricos para apoio à tomada de decisão e planejamento de zeladoria urbana.</p>
+                </div>
+                <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                    <button onclick="exportarDados('PDF')" class="btn btn-outline-dark rounded-pill px-3 py-2 fw-semibold me-2 shadow-sm">
+                        <i class="bi bi-file-earmark-pdf me-1"></i> Exportar PDF
+                    </button>
+                    <button onclick="exportarDados('Excel')" class="btn btn-teal rounded-pill px-4 py-2 fw-bold shadow-sm">
+                        <i class="bi bi-file-earmark-excel me-1"></i> Exportar Dados (.XLS)
+                    </button>
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card-relatorio p-3 bg-white shadow-sm">
+                        <form id="formFiltros" class="row g-3 align-items-end">
+                            <div class="col-md-3">
+                                <label class="form-label small fw-semibold text-dark">Período de Análise</label>
+                                <select class="form-select rounded-3" id="filtroPeriodo">
+                                    <option value="30">Últimos 30 dias</option>
+                                    <option value="90" selected>Últimos 90 dias</option>
+                                    <option value="365">Ano Corrente (2026)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-dark">Secretaria / Eixo Responsável</label>
+                                <select class="form-select rounded-3" id="filtroSecretaria">
+                                    <option value="todos">Todos os Eixos Urbanos</option>
+                                    <option value="obras">Obras e Infraestrutura</option>
+                                    <option value="servicos">Serviços Urbanos e Limpeza</option>
+                                    <option value="transito">Segurança e Trânsito</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small fw-semibold text-dark">Região Administrativa</label>
+                                <select class="form-select rounded-3" id="filtroRegiao">
+                                    <option value="todos">Todo o Município</option>
+                                    <option value="centro">Região Central</option>
+                                    <option value="norte">Distrito Norte</option>
+                                    <option value="sul">Distrito Sul</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <button type="button" onclick="atualizarDadosRelatorio()" class="btn btn-dark w-100 rounded-3 fw-semibold">
+                                    <i class="bi bi-funnel me-1"></i> Filtrar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                
+                <div class="col-lg-6">
+                    <div class="card-relatorio p-4 bg-white shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-0">Evolução Mensal por Categoria</h3>
+                            <i class="bi bi-graph-up text-muted"></i>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chartCategorias"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card-relatorio p-4 bg-white shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-0">Volumetria por Bairro / Região</h3>
+                            <i class="bi bi-geo-alt text-muted"></i>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chartBairros"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card-relatorio p-4 bg-white shadow-sm h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-0">Eficiência por Status Atual</h3>
+                            <i class="bi bi-pie-chart text-muted"></i>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chartStatus"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="card-relatorio p-4 bg-white shadow-sm h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-0">Tempo Médio de Resolução (Em Dias)</h3>
+                            <span class="badge bg-success-subtle text-success rounded-pill fw-semibold fs-8">Meta municipal: < 5 dias</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chartTempoResolucao"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h5 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <img src="logo_cor.png" alt="SigoUrbano" class="me-2" style="height:30px; width:auto;"> SigoUrbano
+                    </h5>
+                    <p class="small text-white-50">Dados consolidados em conformidade com as diretrizes de transparência e eficiência pública municipal.</p>
+                </div>
+                <div class="col-md-7 text-center text-md-end align-self-center">
+                    <p class="text-white-50 small mb-0">&copy; 2026 SigoUrbano. Sistema Integrado de Monitoramento de Cidades.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Instâncias globais dos gráficos para manipulação reativa externa
+        let cCat, cBai, cSta, cTem;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarGraficosDoRelatorio();
+        });
+
+        function renderizarGraficosDoRelatorio() {
+            // Cores Temáticas Alinhadas à Identidade SigoUrbano
+            const azulMarinho = '#0a2540';
+            const tealPrincipal = '#009a96';
+            const cinzaTexto = '#4a5568';
+
+            // 1. Gráfico por Categoria (Evolução por Linha)
+            const ctxCat = document.getElementById('chartCategorias').getContext('2d');
+            cCat = new Chart(ctxCat, {
+                type: 'line',
+                data: {
+                    labels: ['Março', 'Abril', 'Maio', 'Junho'],
+                    datasets: [
+                        { label: 'Infraestrutura / Vias', data: [45, 62, 55, 78], borderColor: tealPrincipal, backgroundColor: 'transparent', tension: 0.2, borderWidth: 3 },
+                        { label: 'Serviços Urbanos', data: [30, 41, 60, 48], borderColor: azulMarinho, backgroundColor: 'transparent', tension: 0.2, borderWidth: 3 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: cinzaTexto, boxWidth: 12 } } },
+                    scales: { x: { grid: { display: false } }, y: { ticks: { stepSize: 20 } } }
+                }
+            });
+
+            // 2. Gráfico por Bairro (Barras Horizontais)
+            const ctxBai = document.getElementById('chartBairros').getContext('2d');
+            cBai = new Chart(ctxBai, {
+                type: 'bar',
+                data: {
+                    labels: ['Centro', 'Bairro Industrial', 'Vila Nova', 'Aeroporto', 'Gilberto Machado'],
+                    datasets: [{
+                        label: 'Ocorrências Totais',
+                        data: [112, 89, 74, 53, 31],
+                        backgroundColor: '#009a96',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
+                }
+            });
+
+            // 3. Gráfico por Status (Rosca / Doughnut)
+            const ctxSta = document.getElementById('chartStatus').getContext('2d');
+            cSta = new Chart(ctxSta, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Em Análise', 'Em Processo', 'Resolvido'],
+                    datasets: [{
+                        data: [35, 82, 194],
+                        backgroundColor: ['#dc3545', '#0d6efd', '#198754']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: cinzaTexto, boxWidth: 12, padding: 15 } } },
+                    cutout: '72%'
+                }
+            });
+
+            // 4. Gráfico de Tempo de Resolução (Barras Verticais)
+            const ctxTem = document.getElementById('chartTempoResolucao').getContext('2d');
+            cTem = new Chart(ctxTem, {
+                type: 'bar',
+                data: {
+                    labels: ['Buracos/Vias', 'Iluminação', 'Lixo/Descarte', 'Sinalização', 'Vazamentos'],
+                    datasets: [{
+                        label: 'Média de Dias para Fechamento',
+                        data: [6.4, 2.1, 1.8, 4.2, 3.5],
+                        backgroundColor: '#0a2540',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { grid: { display: false } }, y: { border: { dash: [5, 5] } } }
+                }
+            });
+        }
+
+        // Simulação de reatividade com alteração de filtros (Apoio à decisão em tempo real)
+        function atualizarDadosRelatorio() {
+            // Atualiza de forma randômica controlada os dados para simular o filtro do banco de dados
+            cSta.data.datasets[0].data = [
+                Math.floor(Math.random() * 20) + 10,
+                Math.floor(Math.random() * 40) + 40,
+                Math.floor(Math.random() * 100) + 120
+            ];
+            cSta.update();
+
+            cBai.data.datasets[0].data = [
+                Math.floor(Math.random() * 50) + 60,
+                Math.floor(Math.random() * 50) + 40,
+                Math.floor(Math.random() * 40) + 30,
+                Math.floor(Math.random() * 30) + 20,
+                Math.floor(Math.random() * 20) + 10
+            ];
+            cBai.update();
+            
+            alert("Estatísticas e relatórios filtrados com sucesso para os parâmetros escolhidos.");
+        }
+
+        // Função de utilidade para simular relatórios para download
+        function exportarDados(tipo) {
+            alert(`SigoUrbano: O download do relatório consolidado em formato [${tipo}] foi iniciado com sucesso.`);
+        }
+    </script>
+</body>
+</html>
