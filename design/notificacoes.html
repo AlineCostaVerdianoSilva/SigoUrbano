@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigoUrbano - Central de Notificações & Mapa (RF5)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --cor-teal-principal: #009a96;
+            --cor-teal-escuro: #0a7370;
+            --cor-teal-claro: #e6f5f4;
+            --cor-azul-marinho: #0a2540;
+            --cinza-fundo: #f8f9fa;
+            --cinza-texto: #4a5568;
+            --cinza-borda: #e2e8f0;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--cinza-fundo);
+            color: var(--cinza-texto);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--cinza-borda);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .main-section {
+            flex: 1 0 auto;
+            padding-top: 30px;
+            padding-bottom: 40px;
+        }
+
+        .bloco-notificacoes {
+            background: #ffffff;
+            border: 1px solid var(--cinza-borda);
+            border-bottom: 4px solid var(--cinza-borda);
+            border-radius: 12px;
+        }
+
+        .notificacao-item {
+            padding: 20px;
+            border-bottom: 1px solid var(--cinza-borda);
+            transition: all 0.2s ease;
+            position: relative;
+            cursor: pointer;
+        }
+        .notificacao-item:last-child {
+            border-bottom: none;
+        }
+        .notificacao-item:hover {
+            background-color: #f8fafc;
+            transform: translateX(3px);
+        }
+        
+        .notificacao-item.nao-lida {
+            background-color: #f4fbfb;
+        }
+        .notificacao-item.nao-lida:hover {
+            background-color: #eef9f9;
+        }
+        .notificacao-item.nao-lida::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--cor-teal-principal);
+        }
+
+        .notificacao-item.selecionada {
+            border-left: 4px solid var(--cor-azul-marinho) !important;
+            background-color: #f0f4f8;
+        }
+
+        .ponto-status {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .ponto-nao-lida { background-color: var(--cor-teal-principal); }
+        .ponto-lida { background-color: #cbd5e1; }
+
+        .btn-outline-teal {
+            border: 1px solid var(--cor-teal-principal);
+            color: var(--cor-teal-principal);
+            background: transparent;
+        }
+        .btn-outline-teal:hover {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+        }
+
+        #mapa-ocorrencias {
+            width: 100%;
+            height: 500px;
+            border-radius: 12px;
+            border: 1px solid var(--cinza-borda);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        @media (min-width: 992px) {
+            #mapa-ocorrencias {
+                height: 600px;
+                position: sticky;
+                top: 90px;
+            }
+        }
+
+        .empty-state {
+            display: none;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer {
+            background-color: var(--cor-azul-marinho);
+            color: #e2e8f0;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="index.html">
+                    <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                    <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="index.html">Painel Inicial</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="registrar-ocorrencia.html">Registrar Ocorrência</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="meus-chamados.html">Meus Chamados</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3 active" href="mapa.html">Mapa Urbano</a></li>
+                        <li class="nav-item ms-lg-2 position-relative">
+                            <a class="nav-link px-3" href="notificacoes.html">
+                                <i class="bi bi-bell-fill text-dark fs-5"></i>
+                                <span class="position-absolute top-1 start-75 translate-middle badge rounded-pill bg-danger" id="badgeNav">2</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-section">
+        <div class="container">
+            
+            <div class="row mb-4 align-items-end g-3 pt-2">
+                <div class="col-md-7">
+                    <span class="badge bg-dark text-white rounded-pill px-3 py-2 mb-3 fw-semibold d-inline-block shadow-sm">
+                        <i class="bi bi-map-fill text-info me-1"></i> Central de Alertas & Mapa Integrado
+                    </span>
+                    <h1 class="fw-bold text-dark h2 mb-1">Painel Operacional</h1>
+                    <p class="text-muted mb-0">Selecione um alerta para geolocalização ou clique em visualizar para abrir os detalhes do formulário.</p>
+                </div>
+                <div class="col-md-5 text-md-end">
+                    <button id="btnMarcarTodas" class="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-semibold shadow-sm">
+                        <i class="bi bi-check2-all me-1"></i>Marcar todas como lidas
+                    </button>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="bloco-notificacoes p-3 bg-white shadow-sm mb-4">
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button class="btn btn-sm rounded-pill px-3 btn-filtro-notif fw-bold" data-filter="todas" style="color: var(--cor-teal-principal); background-color: var(--cor-teal-claro);">
+                                Todas (<span id="qtdTodas">2</span>)
+                            </button>
+                            <button class="btn btn-sm rounded-pill px-3 btn-filtro-notif text-muted" data-filter="nao-lida">
+                                Não lidas (<span id="qtdNaoLidas">2</span>)
+                            </button>
+                            <button class="btn btn-sm rounded-pill px-3 btn-filtro-notif text-muted" data-filter="lida">
+                                Lidas (<span id="qtdLidas">0</span>)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bloco-notificacoes bg-white shadow-sm overflow-hidden" id="containerNotificacoes">
+                        
+                        <div class="notificacao-item nao-lida" data-status="nao-lida" data-id="SU-498102" data-lat="-20.8486" data-lng="-41.1128">
+                            <div class="d-sm-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex align-items-center">
+                                    <span class="ponto-status ponto-nao-lida me-2 shadow-sm"></span>
+                                    <h5 class="h6 fw-bold text-dark mb-0 titulo-notif">Mudança de Status: Concluído</h5>
+                                </div>
+                                <span class="text-muted small mt-1 mt-sm-0 d-block"><i class="bi bi-clock me-1"></i>Hoje, 10:15</span>
+                            </div>
+                            <p class="small text-muted mb-3">O chamado operacional de protocolo <b>#SU-498102</b> referente a "Alagamentos e Bueiros" foi marcado como <b>Resolvido</b> pela Secretaria de Obras.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small">#SU-498102</span>
+                                <button class="btn btn-outline-teal btn-sm rounded-pill px-3 fw-semibold chamado-link" data-protocolo="SU-498102" data-tipo="Alagamentos e Bueiros">
+                                    Visualizar Ocorrência <i class="bi bi-arrow-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="notificacao-item nao-lida" data-status="nao-lida" data-id="SU-741093" data-lat="-20.8540" data-lng="-41.1210">
+                            <div class="d-sm-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex align-items-center">
+                                    <span class="ponto-status ponto-nao-lida me-2 shadow-sm"></span>
+                                    <h5 class="h6 fw-bold text-dark mb-0 titulo-notif">Mudança de Status: Em Processo</h5>
+                                </div>
+                                <span class="text-muted small mt-1 mt-sm-0 d-block"><i class="bi bi-clock me-1"></i>Ontem, 14:30</span>
+                            </div>
+                            <p class="small text-muted mb-3">Uma Ordem de Serviço foi emitida para o protocolo <b>#SU-741093</b> ("Iluminação Pública"). A equipe técnica foi despachada.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 small">#SU-741093</span>
+                                <button class="btn btn-outline-teal btn-sm rounded-pill px-3 fw-semibold chamado-link" data-protocolo="SU-741093" data-tipo="Iluminação Pública">
+                                    Visualizar Ocorrência <i class="bi bi-arrow-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="empty-state" id="notifEmptyState">
+                            <i class="bi bi-envelope-open text-muted display-4 d-block mb-3"></i>
+                            <h6 class="fw-bold text-dark mb-1">Nenhuma notificação encontrada</h6>
+                            <p class="text-muted small mb-0">Não existem alertas nesta categoria.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div id="mapa-ocorrencias"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h5 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <img src="logo_cor.png" alt="SigoUrbano" class="me-2" style="height:30px; width:auto;"> SigoUrbano
+                    </h5>
+                    <p class="small text-white-50">Eficiência operacional e transparência na governança pública municipal.</p>
+                </div>
+                <div class="col-md-7 text-center text-md-end align-self-center">
+                    <p class="text-white-50 small mb-0">© 2026 SigoUrbano. Apoio à Gestão de Cidades Inteligentes.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let map;
+        let markers = {};
+        let infoWindow;
+
+        const ocorrenciasData = [
+            { id: "SU-498102", titulo: "Alagamentos e Bueiros", desc: "Protocolo #SU-498102 - Marcado como Resolvido.", lat: -20.8486, lng: -41.1128, tipo: "infra" },
+            { id: "SU-741093", titulo: "Iluminação Pública", desc: "Protocolo #SU-741093 - Equipe Técnica Despachada.", lat: -20.8540, lng: -41.1210, tipo: "eletrica" }
+        ];
+
+        function initMap() {
+            const centroInicial = { lat: -20.8515, lng: -41.1169 }; 
+            
+            map = new google.maps.Map(document.getElementById("mapa-ocorrencias"), {
+                zoom: 14,
+                center: centroInicial,
+                mapTypeControl: false,
+                streetViewControl: false,
+                styles: [
+                    { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] }
+                ]
+            });
+
+            infoWindow = new google.maps.InfoWindow();
+
+            ocorrenciasData.forEach(loc => {
+                const marker = new google.maps.Marker({
+                    position: { lat: loc.lat, lng: loc.lng },
+                    map: map,
+                    title: loc.titulo,
+                    animation: google.maps.Animation.DROP
+                });
+
+                marker.addListener("click", () => {
+                    abrirInfoMarcador(marker, loc);
+                    focarCardLista(loc.id);
+                });
+
+                markers[loc.id] = marker;
+            });
+        }
+
+        function abrirInfoMarcador(marker, loc) {
+            // Alterado o link dentro da janela flutuante do mapa aqui também
+            infoWindow.setContent(`
+                <div style="padding: 5px;">
+                    <h6 style="margin-bottom: 5px; color: var(--cor-azul-marinho); font-weight: bold;">${loc.titulo}</h6>
+                    <p style="font-size: 12px; margin-bottom: 5px; color: #555;">${loc.desc}</p>
+                    <a href="registrar-ocorrencia.html?protocolo=${loc.id}&categoria=${encodeURIComponent(loc.titulo)}" style="font-size: 11px; color: var(--cor-teal-principal); font-weight: bold; text-decoration: none;">Abrir Registro →</a>
+                </div>
+            `);
+            infoWindow.open(map, marker);
+        }
+
+        function focarCardLista(id) {
+            document.querySelectorAll('.notificacao-item').forEach(card => {
+                card.classList.remove('selecionada');
+                if (card.getAttribute('data-id') === id) {
+                    card.classList.add('selecionada');
+                    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    
+                    if (card.classList.contains('nao-lida')) {
+                        marcarComoLido(card);
+                        atualizarMetricas();
+                        aplicarFiltroVisivel();
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnMarcarTodas = document.getElementById('btnMarcarTodas');
+            const containerNotificacoes = document.getElementById('containerNotificacoes');
+            const badgeNav = document.getElementById('badgeNav');
+            const botoesFiltro = document.querySelectorAll('.btn-filtro-notif');
+            const emptyState = document.getElementById('notifEmptyState');
+            
+            let filtroAtual = 'todas';
+
+            containerNotificacoes.addEventListener('click', (e) => {
+                const botaoVisualizar = e.target.closest('.chamado-link');
+                const item = e.target.closest('.notificacao-item');
+                
+                if (!item) return;
+
+                const id = item.getAttribute('data-id');
+                const lat = parseFloat(item.getAttribute('data-lat'));
+                const lng = parseFloat(item.getAttribute('data-lng'));
+
+                // Alterada a rota de redirecionamento dinâmico do clique do botão do card aqui
+                if (botaoVisualizar) {
+                    const protocolo = botaoVisualizar.getAttribute('data-protocolo');
+                    const tipo = botaoVisualizar.getAttribute('data-tipo');
+                    window.location.href = `registrar-ocorrencia.html?protocolo=${protocolo}&categoria=${encodeURIComponent(tipo)}`;
+                    return; 
+                }
+
+                if (map && markers[id]) {
+                    map.panTo({ lat: lat, lng: lng });
+                    map.setZoom(16);
+                    
+                    const locObjeto = ocorrenciasData.find(x => x.id === id);
+                    abrirInfoMarcador(markers[id], locObjeto);
+
+                    document.querySelectorAll('.notificacao-item').forEach(c => c.classList.remove('selecionada'));
+                    item.classList.add('selecionada');
+                }
+
+                if (item.classList.contains('nao-lida')) {
+                    marcarComoLido(item);
+                    atualizarMetricas();
+                    aplicarFiltroVisivel();
+                }
+            });
+
+            btnMarcarTodas.addEventListener('click', () => {
+                document.querySelectorAll('.notificacao-item').forEach(item => marcarComoLido(item));
+                atualizarMetricas();
+                aplicarFiltroVisivel();
+            });
+
+            botoesFiltro.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    botoesFiltro.forEach(b => {
+                        b.classList.remove('fw-bold');
+                        b.classList.add('text-muted');
+                        b.style.backgroundColor = 'transparent';
+                        b.style.color = 'var(--cinza-texto)';
+                    });
+                    
+                    btn.style.backgroundColor = 'var(--cor-teal-claro)';
+                    btn.style.color = 'var(--cor-teal-principal)';
+                    btn.classList.add('fw-bold');
+                    btn.classList.remove('text-muted');
+
+                    filtroAtual = btn.getAttribute('data-filter');
+                    aplicarFiltroVisivel();
+                });
+            });
+
+            function marcarComoLido(item) {
+                item.classList.remove('nao-lida');
+                item.setAttribute('data-status', 'lida');
+                const ponto = item.querySelector('.ponto-status');
+                if(ponto) ponto.className = 'ponto-status ponto-lida me-2';
+                const titulo = item.querySelector('.titulo-notif');
+                if(titulo) titulo.className = 'h6 fw-semibold text-secondary mb-0 titulo-notif';
+            }
+
+            function atualizarMetricas() {
+                const total = document.querySelectorAll('.notificacao-item').length;
+                const naoLidas = document.querySelectorAll('.notificacao-item.nao-lida').length;
+                const lidas = total - naoLidas;
+                
+                if(badgeNav) {
+                    badgeNav.textContent = naoLidas;
+                    badgeNav.style.display = naoLidas === 0 ? 'none' : 'inline-block';
+                }
+                document.getElementById('qtdTodas').textContent = total;
+                document.getElementById('qtdNaoLidas').textContent = naoLidas;
+                document.getElementById('qtdLidas').textContent = lidas;
+            }
+
+            function aplicarFiltroVisivel() {
+                const itensNotificacao = document.querySelectorAll('.notificacao-item');
+                let itensVisiveis = 0;
+
+                itensNotificacao.forEach(item => {
+                    const statusItem = item.getAttribute('data-status');
+                    const id = item.getAttribute('data-id');
+
+                    if(filtroAtual === 'todas' || statusItem === filtroAtual) {
+                        item.style.display = 'block';
+                        itensVisiveis++;
+                        if (markers[id]) markers[id].setMap(map);
+                    } else {
+                        item.style.display = 'none';
+                        if (markers[id]) markers[id].setMap(null);
+                    }
+                });
+
+                emptyState.style.display = itensVisiveis === 0 ? 'block' : 'none';
+            }
+
+            atualizarMetricas();
+        });
+    </script>
+</body>
+</html>

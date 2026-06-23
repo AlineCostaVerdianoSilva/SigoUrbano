@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigoUrbano - Gestão de Ocorrências Urbanas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* NOVA PALETA DE CORES ADAPTADA (Teal, Azul Marinho e Cinza) */
+        :root {
+            --cor-teal-principal: #009a96;   /* Verde-água da logo */
+            --cor-teal-escuro: #0a7370;      /* Tom mais escuro para hovers */
+            --cor-teal-claro: #e6f5f4;       /* Fundo suave para blocks de destaque */
+            --cor-azul-marinho: #0a2540;     /* Azul Marinho Elegante para substituição do Laranja */
+            --cor-azul-marinho-hover: #06182b;
+            --cinza-fundo: #f8f9fa;          /* Fundo neutro e moderno */
+            --cinza-texto: #4a5568;          /* Texto suave */
+            --cinza-borda: #e2e8f0;          /* Divisores discretos */
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--cinza-texto);
+            background-color: #ffffff;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        /* Hero / Banner Principal */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(10, 37, 64, 0.95) 0%, rgba(0, 154, 150, 0.9) 100%), 
+                        url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1920') center/cover no-repeat;
+            color: #ffffff;
+            padding: 140px 0 100px 0;
+        }
+
+        /* Botões Customizados */
+        .btn-teal {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-teal:hover {
+            background-color: var(--cor-teal-escuro);
+            color: #ffffff;
+        }
+        .btn-marinho {
+            background-color: var(--cor-azul-marinho);
+            color: #ffffff;
+            border: none;
+        }
+        .btn-marinho:hover {
+            background-color: var(--cor-azul-marinho-hover);
+            color: #ffffff;
+        }
+        .btn-outline-teal {
+            border: 2px solid var(--cor-teal-principal);
+            color: var(--cor-teal-principal);
+            background: transparent;
+        }
+        .btn-outline-teal:hover {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+        }
+
+        /* Cards de Categorias (Efeito Hover) */
+        .card-categoria {
+            border: 1px solid var(--cinza-borda);
+            border-bottom: 4px solid var(--cinza-borda);
+            transition: all 0.3s ease;
+        }
+        .card-categoria:hover {
+            transform: translateY(-5px);
+            border-bottom-color: var(--cor-teal-principal);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .icon-box {
+            color: var(--cor-teal-principal);
+        }
+
+        /* Seção de Planos */
+        .card-plano {
+            border: 1px solid var(--cinza-borda);
+            transition: transform 0.3s ease;
+        }
+        .card-plano.destaque {
+            border: 2px solid var(--cor-teal-principal);
+            position: relative;
+        }
+        .card-plano.destaque .badge-destaque {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--cor-azul-marinho);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* Rodapé */
+        footer {
+            background-color: var(--cor-azul-marinho);
+            color: #e2e8f0;
+        }
+
+        /* Estilo da Seção de Equipe */
+        .avatar-equipe {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 4px solid var(--cor-teal-claro);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="#">
+                    <img src="C:\Users\20231imi037\Documents\implementaçaosigourbano\SigoUrbano\templates\SigoUrbanoPaginas\logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                    <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#ocorrencias">Ocorrências</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#funcionalidades">Funcionalidades</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#planos">Planos</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="#equipe">Nossa Equipe</a></li>
+                        <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                            <a href="login.html" class="btn btn-outline-secondary btn-sm rounded-pill px-4 me-2">Entrar</a>
+                            <a href="cadastro.html" class="btn btn-teal btn-sm rounded-pill px-4">Cadastrar-se</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7 text-center text-lg-start">
+                    <span class="badge bg-white text-dark rounded-pill px-3 py-2 mb-3 fw-semibold shadow-sm">
+                        <i class="bi bi-star-fill text-warning me-1"></i> Transparência Pública Coletiva
+                    </span>
+                    <h1 class="display-4 fw-bold mb-3">Sua cidade mais inteligente, problemas urbanos resolvidos.</h1>
+                    <p class="lead mb-4 opacity-90">Uma plataforma integrada para governos municipais e cidadãos. Relate, acompanhe e audite a manutenção de vias, iluminação e saneamento em tempo real.</p>
+                    <div class="d-grid d-md-flex gap-3 justify-content-center justify-content-lg-start">
+                        <a href="registrar-ocorrencia.html" class="btn btn-teal btn-lg fw-bold px-4 py-3 rounded-pill shadow">
+    <i class="bi bi-megaphone-fill me-2"></i>Registrar Ocorrência
+</a>
+                        <a href="#planos" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill">
+                            Ver Planos Governamentais
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block">
+                    <div class="bg-white p-4 rounded-4 shadow text-dark border border-light">
+                        <h5 class="fw-bold text-center mb-3 text-dark"><i class="bi bi-shield-check text-success me-2"></i>Canal de Transparência</h5>
+                        <p class="text-muted small text-center">Acompanhe os indicadores reais da plataforma.</p>
+                        <hr class="text-muted">
+                        <div class="d-flex justify-content-between mb-2 small"><span class="text-muted">Manutenções Concluídas:</span><strong style="color: var(--cor-teal-principal)">94.2%</strong></div>
+                        <div class="progress mb-3" style="height: 6px;"><div class="progress-bar" style="width: 94%; background-color: var(--cor-teal-principal)"></div></div>
+                        <div class="d-flex justify-content-between mb-2 small"><span class="text-muted">Tempo Médio de Resposta:</span><strong style="color: var(--cor-azul-marinho)">24h</strong></div>
+                        <div class="progress mb-3" style="height: 6px;"><div class="progress-bar" style="width: 85%; background-color: var(--cor-azul-marinho)"></div></div>
+                        <div class="d-flex justify-content-between mb-2 small"><span class="text-muted">Índice de Confiança LAI:</span><strong class="text-dark">Nota 10</strong></div>
+                        <div class="progress" style="height: 6px;"><div class="progress-bar bg-dark" style="width: 100%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ocorrencias" class="py-5 bg-light">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-dark">O que pode ser gerenciado?</h2>
+                <p class="text-muted mx-auto" style="max-width: 600px;">Centralização total das demandas mais recorrentes do espaço urbano para simplificar a atuação das secretarias municipais.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="card h-100 p-4 text-center bg-white card-categoria">
+                        <div class="icon-box mb-3"><i class="bi bi-cone-striped fs-1"></i></div>
+                        <h5 class="fw-bold h6 text-dark">Buracos e Vias</h5>
+                        <p class="text-muted small mb-0">Mapeamento de asfalto danificado, calçadas obstruídas e recapeamento necessário.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card h-100 p-4 text-center bg-white card-categoria">
+                        <div class="icon-box mb-3"><i class="bi bi-lightbulb-fill fs-1"></i></div>
+                        <h5 class="fw-bold h6 text-dark">Iluminação Pública</h5>
+                        <p class="text-muted small mb-0">Pontos escuros, lâmpadas queimadas ou postes com problemas estruturais na rede urbana.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card h-100 p-4 text-center bg-white card-categoria">
+                        <div class="icon-box mb-3"><i class="bi bi-trash3-fill fs-1"></i></div>
+                        <h5 class="fw-bold h6 text-dark">Lixo e Descarte</h5>
+                        <p class="text-muted small mb-0">Acúmulo irregular de resíduos sólidos, entulhos e falhas nos cronogramas de coleta.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card h-100 p-4 text-center bg-white card-categoria">
+                        <div class="icon-box mb-3"><i class="bi bi-moisture fs-1"></i></div>
+                        <h5 class="fw-bold h6 text-dark">Alagamentos e Bueiros</h5>
+                        <p class="text-muted small mb-0">Bocas de lobo entupidas, drenagem deficiente e pontos críticos de enchentes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="funcionalidades" class="py-5">
+        <div class="container py-4">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <span style="color: var(--cor-azul-marinho)" class="fw-bold text-uppercase small tracking-wider">Recursos Avançados</span>
+                    <h2 class="fw-bold text-dark mt-2 mb-4">Gestão inteligente baseada em dados reais</h2>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="me-3" style="color: var(--cor-teal-principal)"><i class="bi bi-geo-alt-fill fs-3"></i></div>
+                        <div>
+                            <h5 class="fw-bold text-dark h6">Geolocalização Automatizada</h5>
+                            <p class="text-muted small">O cidadão fotografa o problem e o sistema extrai automaticamente as coordenadas geográficas exatas para guiar a equipe de campo.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="me-3" style="color: var(--cor-teal-principal)"><i class="bi bi-shield-shaded fs-3"></i></div>
+                        <div>
+                            <h5 class="fw-bold text-dark h6">Painel de Transparência Aberta</h5>
+                            <p class="text-muted small">Todo o andamento fica público, em conformidade com a Lei de Acesso à Informação, gerando credibilidade e governança limpa.</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex">
+                        <div class="me-3" style="color: var(--cor-teal-principal)"><i class="bi bi-cpu-fill fs-3"></i></div>
+                        <div>
+                            <h5 class="fw-bold text-dark h6">Triagem e Despacho Otimizado</h5>
+                            <p class="text-muted small">Encaminhamento inteligente das demandas para os setores corretos sem necessidade de trâmite burocrático em papel.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=600" class="img-fluid rounded-4 shadow-sm border" alt="Gestão Tecnológica Urbana">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="planos" class="py-5 bg-light border-top border-bottom">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-dark">Planos Customizados para Municípios</h2>
+                <p class="text-muted mx-auto" style="max-width: 600px;">Modernize a zeladoria da sua cidade independentemente do tamanho populacional. Sem burocracia na implantação.</p>
+            </div>
+            
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-4">
+                    <div class="card h-100 p-4 bg-white card-plano shadow-sm text-center">
+                        <h4 class="h5 fw-bold text-muted mb-2">Cidades Pequenas</h4>
+                        <p class="text-muted small">Até 50 mil habitantes</p>
+                        <hr class="my-3">
+                        <ul class="list-unstyled text-start small mb-4">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Portal do Cidadão Responsivo</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Painel Administrativo Centralizado</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Até 3 Secretarias Integradas</li>
+                        </ul>
+                        <button class="btn btn-outline-teal w-100 rounded-pill mt-auto">Solicitar Orçamento</button>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100 p-4 bg-white card-plano destaque shadow text-center">
+                        <div class="badge-destaque">Mais Contratado</div>
+                        <h4 class="h5 fw-bold mb-2" style="color: var(--cor-teal-principal)">Médias Cidades</h4>
+                        <p class="text-muted small">De 50 mil a 300 mil habitantes</p>
+                        <hr class="my-3">
+                        <ul class="list-unstyled text-start small mb-4">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Tudo do plano anterior</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Geomapeamento e Rotas em Tempo Real</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Até 10 Secretarias Integradas</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Painel Público de Auditoria</li>
+                        </ul>
+                        <button class="btn btn-marinho w-100 rounded-pill mt-auto shadow-sm">Demonstração Técnica</button>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100 p-4 bg-white card-plano shadow-sm text-center">
+                        <h4 class="h5 fw-bold text-muted mb-2">Metrópoles</h4>
+                        <p class="text-muted small">Acima de 300 mil habitantes</p>
+                        <hr class="my-3">
+                        <ul class="list-unstyled text-start small mb-4">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Infraestrutura Nuvem Dedicada</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Integração Total via APIs Governamentais</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Secretarias e Subprefeituras Ilimitadas</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Suporte Corretivo com SLA de 2h</li>
+                        </ul>
+                        <button class="btn btn-outline-teal w-100 rounded-pill mt-auto">Falar com Consultor</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="equipe" class="py-5 bg-white">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-dark">Nossa Equipe</h2>
+                <p class="text-muted">Estudantes comprometidas com a inovação e o desenvolvimento urbano inteligente.</p>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-6 col-md-3 text-center">
+                    <img src="C:\Users\20231imi037\Documents\implementaçaosigourbano\SigoUrbano\templates\SigoUrbanoPaginas\aline.jpg" class="rounded-circle avatar-equipe mb-3" alt="Designer">
+                    <h6 class="fw-bold mb-1">Aline Verdiano</h6>
+                    <p class="small mb-0" style="color: var(--cor-teal-principal); font-weight: 600;">Designer UI/UX</p>
+                    <p class="text-muted px-2 x-small text-center opacity-75 d-none d-md-block" style="font-size: 0.8rem">Identidade visual e experiência intuitiva.</p>
+                </div>
+                <div class="col-6 col-md-3 text-center">
+                    <img src="C:\Users\20231imi037\Documents\implementaçaosigourbano\SigoUrbano\templates\SigoUrbanoPaginas\eduarda.jpg" class="rounded-circle avatar-equipe mb-3" alt="Programadora">
+                    <h6 class="fw-bold mb-1">Eduarda Aleixo</h6>
+                    <p class="small mb-0" style="color: var(--cor-teal-principal); font-weight: 600;">Desenvolvedora</p>
+                    <p class="text-muted px-2 x-small text-center opacity-75 d-none d-md-block" style="font-size: 0.8rem">Construção técnica e códigos responsivos.</p>
+                </div>
+                <div class="col-6 col-md-3 text-center">
+                    <img src="C:\Users\20231imi037\Documents\implementaçaosigourbano\SigoUrbano\templates\SigoUrbanoPaginas\esther.jpg" class="rounded-circle avatar-equipe mb-3" alt="Gerente">
+                    <h6 class="fw-bold mb-1">Esther Boleli</h6>
+                    <p class="small mb-0" style="color: var(--cor-teal-principal); font-weight: 600;">Gerente de Projetos</p>
+                    <p class="text-muted px-2 x-small text-center opacity-75 d-none d-md-block" style="font-size: 0.8rem">Prazos, escopo e requisitos de negócio.</p>
+                </div>
+                <div class="col-6 col-md-3 text-center">
+                    <img src="C:\Users\20231imi037\Documents\implementaçaosigourbano\SigoUrbano\templates\SigoUrbanoPaginas\valentina.jpg" class="rounded-circle avatar-equipe mb-3" alt="QA">
+                    <h6 class="fw-bold mb-1">Valentina Leonardo</h6>
+                    <p class="small mb-0" style="color: var(--cor-teal-principal); font-weight: 600;">Analista de Qualidade</p>
+                    <p class="text-muted px-2 x-small text-center opacity-75 d-none d-md-block" style="font-size: 0.8rem">Homologação, testes e análise de dados.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h5 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <img src="C:\Users\20231imi037\Documents\implementaçaosigourbano\SigoUrbano\templates\SigoUrbanoPaginas\logo_cor.png" alt="SigoUrbano" class="me-2" style="height:30px; width:auto;"> SigoUrbano
+                    </h5>
+                    <p class="small text-white-50">Eficiência operacional e transparência radical na governança pública municipal.</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <h5 class="fw-bold text-white mb-3 small text-uppercase tracking-wider">Transparência</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50 text-decoration-none small d-block mb-2">Segurança de Dados (LGPD)</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none small d-block mb-2">Lei de Acesso à Informação</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <h5 class="fw-bold text-white mb-3 small text-uppercase tracking-wider">Contato Oficial</h5>
+                    <p class="text-white-50 small mb-1"><i class="bi bi-envelope me-2"></i>contato@sigourbano.com.br</p>
+                    <p class="text-white-50 small"><i class="bi bi-telephone me-2"></i>0800 700 8000</p>
+                </div>
+            </div>
+            <hr class="my-4 border-secondary">
+            <div class="row">
+                <div class="col text-center">
+                    <p class="text-white-50 small mb-0">&copy; 2026 SigoUrbano. Plataforma estudantil voltada para Smart Cities e Auditoria Governamental.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

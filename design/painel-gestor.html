@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigoUrbano - Dashboard do Gestor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --cor-teal-principal: #009a96;
+            --cor-teal-escuro: #0a7370;
+            --cor-teal-claro: #e6f5f4;
+            --cor-azul-marinho: #0a2540;
+            --cinza-fundo: #f8f9fa;
+            --cinza-texto: #4a5568;
+            --cinza-borda: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--cinza-texto);
+            background-color: var(--cinza-fundo);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+        
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .card-gestao {
+            background: #ffffff;
+            border: 1px solid var(--cinza-borda);
+            border-bottom: 4px solid var(--cinza-borda);
+            border-radius: 12px;
+        }
+
+        .badge-live {
+            background-color: #e6f8f3;
+            color: #00a878;
+            font-weight: 700;
+            animation: pulse-live 2s infinite;
+        }
+
+        @keyframes pulse-live {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .btn-teal {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-teal:hover {
+            background-color: var(--cor-teal-escuro);
+            color: #ffffff;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        footer {
+            background-color: var(--cor-azul-marinho);
+            color: #e2e8f0;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="dashboard-gestor.html">
+                    <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                    <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold active" href="dashboard-gestor.html" style="color: var(--cor-teal-principal) !important;">Painel Executivo</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="triagem.html">Triagem Global</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="mapa.html">Mapa Estratégico</a></li>
+                        <li class="nav-item ms-2"><a class="btn btn-outline-danger btn-sm rounded-pill px-3" href="login.html"><i class="bi bi-box-arrow-right me-1"></i>Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="py-5">
+        <div class="container">
+            
+            <div class="row mb-4 align-items-center">
+                <div class="col-md-8">
+                    <span class="badge badge-live rounded-pill px-3 py-2 mb-2 d-inline-block">
+                        <i class="bi bi-broadcast me-1"></i> Indicadores em Tempo Real
+                    </span>
+                    <h1 class="fw-bold text-dark h2">Painel de Gestão Estratégica</h1>
+                    <p class="text-muted mb-0">Consolidado volumétrico de demandas urbanas para suporte e planejamento de manutenções.</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <button onclick="simularAtualizacao()" class="btn btn-teal rounded-pill px-4 py-2 fw-bold shadow-sm">
+                        <i class="bi bi-arrow-clockwise me-1"></i>Atualizar Relatório
+                    </button>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3">
+                    <div class="card-gestao p-3 bg-white shadow-sm">
+                        <span class="text-muted small fw-semibold d-block">Chamados Criados (Mês)</span>
+                        <div class="d-flex align-items-baseline justify-content-between mt-2">
+                            <h2 class="fw-bold text-dark mb-0" id="cardTotal">142</h2>
+                            <span class="text-success small fw-bold"><i class="bi bi-graph-up me-1"></i>+12%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="card-gestao p-3 bg-white shadow-sm" style="border-bottom-color: #dc3545;">
+                        <span class="text-muted small fw-semibold d-block">Aguardando Análise</span>
+                        <div class="d-flex align-items-baseline justify-content-between mt-2">
+                            <h2 class="fw-bold text-danger mb-0" id="cardAnalise">28</h2>
+                            <span class="badge bg-danger-subtle text-danger rounded-pill px-2 py-1 fs-8">Crítico</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="card-gestao p-3 bg-white shadow-sm" style="border-bottom-color: #0d6efd;">
+                        <span class="text-muted small fw-semibold d-block">Em Resolução</span>
+                        <div class="d-flex align-items-baseline justify-content-between mt-2">
+                            <h2 class="fw-bold text-primary mb-0" id="cardProcesso">54</h2>
+                            <span class="text-muted small">Equipes em campo</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="card-gestao p-3 bg-white shadow-sm" style="border-bottom-color: #198754;">
+                        <span class="text-muted small fw-semibold d-block">Taxa de Resolução</span>
+                        <div class="d-flex align-items-baseline justify-content-between mt-2">
+                            <h2 class="fw-bold text-success mb-0" id="cardResolvido">60</h2>
+                            <span class="text-success small fw-semibold">42.2% total</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-lg-7">
+                    <div class="card-gestao p-4 bg-white shadow-sm h-100">
+                        <h3 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-4">Volume de Demandas por Categoria</h3>
+                        <div class="chart-container">
+                            <canvas id="chartCategorias"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-5">
+                    <div class="card-gestao p-4 bg-white shadow-sm h-100">
+                        <h3 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-4">Eficiência Operacional (Status)</h3>
+                        <div class="chart-container">
+                            <canvas id="chartStatus"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-gestao p-4 bg-white shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3">
+                            <h3 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-0">Alertas Críticos Recentes</h3>
+                            <a href="triagem.html" class="btn btn-link p-0 small text-decoration-none fw-bold shadow-none" style="color: var(--cor-teal-principal)">Ver todas no painel de triagem &rarr;</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr class="table-light fs-7 text-uppercase">
+                                        <th class="fw-bold text-dark">Protocolo</th>
+                                        <th class="fw-bold text-dark">Categoria</th>
+                                        <th class="fw-bold text-dark">Localização</th>
+                                        <th class="fw-bold text-dark">Tempo de Espera</th>
+                                        <th class="fw-bold text-dark">Criticidade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-bold text-dark">#SU-849204</td>
+                                        <td>Buracos e Vias</td>
+                                        <td class="small text-muted"><i class="bi bi-geo-alt text-danger me-1"></i>Av. Governador Lacerda, 1205</td>
+                                        <td>2 horas atrás</td>
+                                        <td><span class="badge bg-danger rounded-pill px-2.5 py-1 fs-8">Alta</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-dark">#SU-512948</td>
+                                        <td>Lixo e Descarte</td>
+                                        <td class="small text-muted"><i class="bi bi-geo-alt text-danger me-1"></i>Estrada Municipal KM 12 - Ipê</td>
+                                        <td>5 horas atrás</td>
+                                        <td><span class="badge bg-danger rounded-pill px-2.5 py-1 fs-8">Alta</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-dark">#SU-201943</td>
+                                        <td>Vazamento de Água</td>
+                                        <td class="small text-muted"><i class="bi bi-geo-alt text-danger me-1"></i>Rua Bernardo Horta, 89</td>
+                                        <td>7 horas atrás</td>
+                                        <td><span class="badge bg-warning text-dark rounded-pill px-2.5 py-1 fs-8">Média</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h5 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <img src="logo_cor.png" alt="SigoUrbano" class="me-2" style="height:30px; width:auto;"> SigoUrbano
+                    </h5>
+                    <p class="small text-white-50">Inteligência geográfica e dados unificados para a modernização da gestão pública municipal.</p>
+                </div>
+                <div class="col-md-7 text-center text-md-end align-self-center">
+                    <p class="text-white-50 small mb-0">&copy; 2026 SigoUrbano. Controladoria Executiva Municipal.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        let graficoCategorias, graficoStatus;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            inicializarGraficos();
+        });
+
+        function inicializarGraficos() {
+            // Configuração do Gráfico de Categorias (Barra Horizontal)
+            const ctxCat = document.getElementById('chartCategorias').getContext('2d');
+            graficoCategorias = new Chart(ctxCat, {
+                type: 'bar',
+                data: {
+                    labels: ['Buracos e Vias', 'Iluminação Pública', 'Lixo e Descarte', 'Sinalização', 'Obras Paradas'],
+                    datasets: [{
+                        label: 'Chamados Registrados',
+                        data: [58, 42, 24, 12, 6],
+                        backgroundColor: '#009a96',
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#4a5568' } },
+                        y: { grid: { display: false }, ticks: { color: '#4a5568' } }
+                    }
+                }
+            });
+
+            // Configuração do Gráfico de Status (Rosca/Doughnut)
+            const ctxStatus = document.getElementById('chartStatus').getContext('2d');
+            graficoStatus = new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Em Análise', 'Em Processo', 'Resolvido'],
+                    datasets: [{
+                        data: [28, 54, 60],
+                        backgroundColor: ['#dc3545', '#0d6efd', '#198754'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { boxWidth: 12, color: '#4a5568', padding: 15 }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        // Função reativa de demonstração do diferencial de "Tempo Real"
+        function simularAtualizacao() {
+            // Simula pequenas variações estatísticas aleatórias nos dados
+            const variacaoAnalise = Math.floor(Math.random() * 4) + 1;
+            const variacaoProcesso = Math.floor(Math.random() * 5) + 2;
+            const variacaoResolvido = Math.floor(Math.random() * 6) + 3;
+            const novoTotal = 142 + variacaoAnalise + variacaoProcesso + variacaoResolvido;
+
+            // Atualiza os valores nos cards
+            document.getElementById('cardTotal').textContent = novoTotal;
+            document.getElementById('cardAnalise').textContent = 28 + variacaoAnalise;
+            document.getElementById('cardProcesso').textContent = 54 + variacaoProcesso;
+            document.getElementById('cardResolvido').textContent = 60 + variacaoResolvido;
+
+            // Atualiza os dados dos gráficos nativamente
+            graficoStatus.data.datasets[0].data = [28 + variacaoAnalise, 54 + variacaoProcesso, 60 + variacaoResolvido];
+            graficoStatus.update();
+
+            graficoCategorias.data.datasets[0].data[0] += variacaoAnalise;
+            graficoCategorias.data.datasets[0].data[1] += variacaoProcesso;
+            graficoCategorias.update();
+        }
+    </script>
+</body>
+</html>

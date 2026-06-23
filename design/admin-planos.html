@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigoUrbano - Gerenciar Planos de Assinatura</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --cor-teal-principal: #009a96;
+            --cor-teal-escuro: #0a7370;
+            --cor-teal-claro: #e6f5f4;
+            --cor-azul-marinho: #0a2540;
+            --cinza-fundo: #f8f9fa;
+            --cinza-texto: #4a5568;
+            --cinza-borda: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--cinza-texto);
+            background-color: var(--cinza-fundo);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+        
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .card-crud {
+            background: #ffffff;
+            border: 1px solid var(--cinza-borda);
+            border-bottom: 4px solid var(--cinza-borda);
+            border-radius: 12px;
+        }
+
+        .btn-teal {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-teal:hover {
+            background-color: var(--cor-teal-escuro);
+            color: #ffffff;
+        }
+
+        .btn-outline-teal {
+            color: var(--cor-teal-principal);
+            border-color: var(--cor-teal-principal);
+        }
+        .btn-outline-teal:hover {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+        }
+
+        .table > :not(caption) > * > * {
+            padding: 16px;
+        }
+
+        .badge-status {
+            font-size: 0.75rem;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        footer {
+            background-color: var(--cor-azul-marinho);
+            color: #e2e8f0;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="dashboard-admin.html">
+                    <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                    <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="dashboard-admin.html">Painel Root</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="gerenciar-clientes.html">Prefeituras</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold active" href="gerenciar-planos.html" style="color: var(--cor-teal-principal) !important;">Planos de Assinatura</a></li>
+                        <li class="nav-item ms-2"><a class="btn btn-outline-danger btn-sm rounded-pill px-3" href="login.html"><i class="bi bi-box-arrow-right me-1"></i>Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="py-5">
+        <div class="container">
+            
+            <div class="row mb-4 align-items-center">
+                <div class="col-md-7">
+                    <span class="badge bg-dark text-white rounded-pill px-3 py-2 mb-2 fw-semibold d-inline-block">
+                        <i class="bi bi-sliders text-teal me-1"></i> Precificação SaaS Core
+                    </span>
+                    <h1 class="fw-bold text-dark h2">Planos Comerciais de Assinatura</h1>
+                    <p class="text-muted mb-0">Gerencie as prateleiras de planos oferecidas para contratação de novos municípios parceiros.</p>
+                </div>
+                <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                    <button onclick="abrirModalCadastroPlanos()" class="btn btn-teal rounded-pill px-4 py-2 fw-bold shadow-sm">
+                        <i class="bi bi-plus-circle me-2"></i>Novo Plano comercial
+                    </button>
+                </div>
+            </div>
+
+            <div id="alertFeedback" class="alert alert-success alert-dismissible fade show d-none rounded-3" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> <span id="alertMessage">Modificação realizada com sucesso!</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-crud bg-white shadow-sm p-4">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light text-uppercase fs-7">
+                                    <tr>
+                                        <th scope="col" class="text-dark fw-bold" style="width: 15%">Identificador</th>
+                                        <th scope="col" class="text-dark fw-bold" style="width: 15%">Mensalidade</th>
+                                        <th scope="col" class="text-dark fw-bold" style="width: 15%">Operadores / Usuários</th>
+                                        <th scope="col" class="text-dark fw-bold" style="width: 20%">Armazenamento (Mídias)</th>
+                                        <th scope="col" class="text-dark fw-bold" style="width: 15%">Nível de Suporte</th>
+                                        <th scope="col" class="text-dark fw-bold" style="width: 10%">Status</th>
+                                        <th scope="col" class="text-dark fw-bold text-end" style="width: 10%">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaPlanos">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div class="modal fade" id="modalPlano" tabindex="-1" aria-labelledby="modalPlanoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header pt-4 px-4 border-bottom-0">
+                    <h5 class="modal-title fw-bold text-dark" id="modalPlanoLabel">Criar Novo Plano</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formPlano">
+                    <div class="modal-body px-4 pb-4 pt-2">
+                        <input type="hidden" id="planoIndex">
+                        
+                        <div class="mb-3">
+                            <label for="inputNomePlano" class="form-label small fw-semibold text-dark">Nome do Plano</label>
+                            <input type="text" class="form-control rounded-3" id="inputNomePlano" required placeholder="Ex: Small, Medium, Large, Enterprise">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="inputMensalidade" class="form-label small fw-semibold text-dark">Valor Mensal (R$)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted">R$</span>
+                                <input type="number" step="0.01" class="form-control rounded-end-3" id="inputMensalidade" required placeholder="0.00">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="inputUsuarios" class="form-label small fw-semibold text-dark">Limite de Usuários</label>
+                                <input type="text" class="form-control rounded-3" id="inputUsuarios" required placeholder="Ex: Até 10 fiscais ou Ilimitado">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="inputArmazenamento" class="form-label small fw-semibold text-dark">Armazenamento Cloud</label>
+                                <input type="text" class="form-control rounded-3" id="inputArmazenamento" required placeholder="Ex: 50 GB, 500 GB, 2 TB">
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="selectSuporte" class="form-label small fw-semibold text-dark">Nível de SLA (Suporte)</label>
+                                <select id="selectSuporte" class="form-select rounded-3" required>
+                                    <option value="Suporte Digital (E-mail)">Suporte Digital (E-mail)</option>
+                                    <option value="Comercial (Até 12h)">Comercial (Até 12h)</option>
+                                    <option value="SLA 24/7 Dedicado">SLA 24/7 Dedicado</option>
+                                    <option value="Gerente de Contas Exclusivo">Gerente de Contas Exclusivo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="selectStatusPlano" class="form-label small fw-semibold text-dark">Disponibilidade Comercial</label>
+                                <select id="selectStatusPlano" class="form-select rounded-3" required>
+                                    <option value="Ativo">Ativo (Visível na vitrine)</option>
+                                    <option value="Descontinuado">Descontinuado (Escondido)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top-0 px-4 pb-4">
+                        <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-teal rounded-pill px-4 fw-bold">Gravar Plano</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalExcluirPlano" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-body p-4 text-center">
+                    <i class="bi bi-trash-fill text-danger fs-1 mb-3 d-block"></i>
+                    <h5 class="fw-bold text-dark">Remover Nível de Plano?</h5>
+                    <p class="text-muted small">Cidades atualmente vinculadas a este SKU de cobrança precisarão ser migradas manualmente.</p>
+                    <input type="hidden" id="excluirPlanoIndex">
+                    <div class="d-flex justify-content-center gap-2 mt-4">
+                        <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" onclick="confirmarExclusaoPlano()" class="btn btn-danger rounded-pill px-3 fw-bold">Deletar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h5 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <img src="logo_cor.png" alt="SigoUrbano" class="me-2" style="height:30px; width:auto;"> SigoUrbano
+                    </h5>
+                    <p class="small text-white-50">Cluster SaaS Core - Configurações Financeiras de Instâncias Multi-Tenant.</p>
+                </div>
+                <div class="col-md-7 text-center text-md-end align-self-center">
+                    <p class="text-white-50 small mb-0">&copy; 2026 SigoUrbano SaaS Finance. Direitos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Banco de dados simulado inicial atendendo o Briefing
+        let listaPlanos = [
+            { nome: 'Small', mensalidade: 1450.00, usuarios: 'Até 5 Fiscais', armazenamento: '50 GB NVMe', suporte: 'Suporte Digital (E-mail)', status: 'Ativo' },
+            { nome: 'Medium', mensalidade: 2900.00, usuarios: 'Até 25 Fiscais', armazenamento: '250 GB NVMe', suporte: 'Comercial (Até 12h)', status: 'Ativo' },
+            { nome: 'Large', mensalidade: 5800.00, usuarios: 'Fiscais Ilimitados', armazenamento: '1 TB Cloud Cluster', suporte: 'SLA 24/7 Dedicado', status: 'Ativo' }
+        ];
+
+        const modalPlanoInstance = new bootstrap.Modal(document.getElementById('modalPlano'));
+        const modalDeletePlanoInstance = new bootstrap.Modal(document.getElementById('modalExcluirPlano'));
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarTabelaPlanos();
+        });
+
+        // Função de renderização reativa
+        function renderizarTabelaPlanos() {
+            const tbody = document.getElementById('tabelaPlanos');
+            tbody.innerHTML = '';
+
+            listaPlanos.forEach((plano, index) => {
+                const badgeColor = plano.status === 'Ativo' ? 'bg-success' : 'bg-secondary';
+                const valorFormatado = plano.mensalidade.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="fw-bold text-dark"><i class="bi bi-box-se text-teal me-2" style="color: var(--cor-teal-principal)"></i>Plano ${plano.nome}</span></td>
+                    <td class="fw-bold text-dark">${valorFormatado}<span class="text-muted fs-8 fw-normal">/mês</span></td>
+                    <td class="small">${plano.usuarios}</td>
+                    <td class="small text-muted">${plano.armazenamento}</td>
+                    <td class="small"><i class="bi bi-headset me-1 text-teal"></i>${plano.suporte}</td>
+                    <td><span class="badge-status ${badgeColor} text-white">${plano.status}</span></td>
+                    <td class="text-end">
+                        <button onclick="abrirModalEdicaoPlanos(${index})" class="btn btn-sm btn-outline-teal rounded-pill px-2.5 py-1 me-1">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button onclick="abrirModalExclusaoPlanos(${index})" class="btn btn-sm btn-outline-danger rounded-pill px-2.5 py-1">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function notificarAlerta(msg) {
+            const alertBox = document.getElementById('alertFeedback');
+            document.getElementById('alertMessage').textContent = msg;
+            alertBox.classList.remove('d-none');
+            setTimeout(() => alertBox.classList.add('d-none'), 4000);
+        }
+
+        // Ação: Iniciar Fluxo de Cadastro
+        function abrirModalCadastroPlanos() {
+            document.getElementById('formPlano').reset();
+            document.getElementById('planoIndex').value = '';
+            document.getElementById('modalPlanoLabel').textContent = 'Cadastrar Novo Modelo de Negócio';
+            modalPlanoInstance.show();
+        }
+
+        // Ação: Iniciar Fluxo de Alteração
+        function abrirModalEdicaoPlanos(index) {
+            const plano = listaPlanos[index];
+            document.getElementById('planoIndex').value = index;
+            document.getElementById('inputNomePlano').value = plano.nome;
+            document.getElementById('inputMensalidade').value = plano.mensalidade;
+            document.getElementById('inputUsuarios').value = plano.usuarios;
+            document.getElementById('inputArmazenamento').value = plano.armazenamento;
+            document.getElementById('selectSuporte').value = plano.suporte;
+            document.getElementById('selectStatusPlano').value = plano.status;
+
+            document.getElementById('modalPlanoLabel').textContent = `Alterar Critérios do Plano ${plano.nome}`;
+            modalPlanoInstance.show();
+        }
+
+        // Submissão Reativa do Formulário (Salvar/Modificar)
+        document.getElementById('formPlano').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const index = document.getElementById('planoIndex').value;
+
+            const dadosPlano = {
+                nome: document.getElementById('inputNomePlano').value,
+                mensalidade: parseFloat(document.getElementById('inputMensalidade').value),
+                usuarios: document.getElementById('inputUsuarios').value,
+                armazenamento: document.getElementById('inputArmazenamento').value,
+                suporte: document.getElementById('selectSuporte').value,
+                status: document.getElementById('selectStatusPlano').value
+            };
+
+            if(index === '') {
+                listaPlanos.push(dadosPlano);
+                notificarAlerta(`Plano comercial "${dadosPlano.nome}" adicionado com sucesso à prateleira comercial.`);
+            } else {
+                listaPlanos[index] = dadosPlano;
+                notificarAlerta(`Os novos parâmetros do Plano ${dadosPlano.nome} entrarão em vigor no próximo ciclo de faturamento.`);
+            }
+
+            modalPlanoInstance.hide();
+            renderizarTabelaPlanos();
+        });
+
+        // Ação: Iniciar Fluxo de Exclusão
+        function abrirModalExclusaoPlanos(index) {
+            document.getElementById('excluirPlanoIndex').value = index;
+            modalDeletePlanoInstance.show();
+        }
+
+        // Confirmação Real de Exclusão
+        function confirmarExclusaoPlano() {
+            const index = document.getElementById('excluirPlanoIndex').value;
+            const nomeRemovido = listaPlanos[index].nome;
+            listaPlanos.splice(index, 1);
+            
+            modalDeletePlanoInstance.hide();
+            renderizarTabelaPlanos();
+            notificarAlerta(`O plano comercial "${nomeRemovido}" foi revogado e arquivado.`);
+        }
+    </script>
+</body>
+</html>

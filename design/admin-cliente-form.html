@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigoUrbano - Formulário de Instância</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --cor-teal-principal: #009a96;
+            --cor-teal-escuro: #0a7370;
+            --cor-teal-claro: #e6f5f4;
+            --cor-azul-marinho: #0a2540;
+            --cinza-fundo: #f8f9fa;
+            --cinza-texto: #4a5568;
+            --cinza-borda: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--cinza-texto);
+            background-color: var(--cinza-fundo);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+        
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .card-formulario {
+            background: #ffffff;
+            border: 1px solid var(--cinza-borda);
+            border-bottom: 4px solid var(--cinza-borda);
+            border-radius: 12px;
+        }
+
+        .btn-teal {
+            background-color: var(--cor-teal-principal);
+            color: #ffffff;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-teal:hover {
+            background-color: var(--cor-teal-escuro);
+            color: #ffffff;
+        }
+
+        footer {
+            background-color: var(--cor-azul-marinho);
+            color: #e2e8f0;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="dashboard-admin.html">
+                    <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img me-2">
+                    <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="dashboard-admin.html">Painel Root</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3 fw-bold" href="gerenciar-clientes.html">Prefeituras (Clientes)</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark px-3" href="configuracoes.html">Configurações</a></li>
+                        <li class="nav-item ms-2"><a class="btn btn-outline-danger btn-sm rounded-pill px-3" href="login.html"><i class="bi bi-box-arrow-right me-1"></i>Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="py-5">
+        <div class="container">
+            
+            <div class="row mb-3">
+                <div class="col">
+                    <a href="gerenciar-clientes.html" class="text-decoration-none small fw-bold" style="color: var(--cor-teal-principal)">
+                        <i class="bi bi-arrow-left me-1"></i> Voltar para controle de prefeituras
+                    </a>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col">
+                    <span class="badge bg-dark text-white rounded-pill px-3 py-2 mb-2 fw-semibold d-inline-block">
+                        <i class="bi bi-layer-forward text-teal me-1"></i> Provisionamento Tenant
+                    </span>
+                    <h1 class="fw-bold text-dark h2" id="tituloPagina">Cadastrar Prefeitura Cliente</h1>
+                    <p class="text-muted" id="subtituloPagina">Configure uma nova instância isolada no cluster SaaS para liberação dos portais municipais.</p>
+                </div>
+            </div>
+
+            <div id="alertFeedback" class="alert alert-success alert-dismissible fade show d-none rounded-3" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> <span>Parâmetros de licença gravados com sucesso! Redirecionando para a central de monitoramento...</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="row justify-content-start">
+                <div class="col-lg-8">
+                    <div class="card-formulario bg-white shadow-sm p-4 p-md-5">
+                        
+                        <form id="formClienteCompleto">
+                            <div class="row g-4">
+                                
+                                <div class="col-12 col-md-8">
+                                    <label for="inputMunicipio" class="form-label small fw-semibold text-dark">Nome do Município / Instância</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted"><i class="bi bi-bank"></i></span>
+                                        <input type="text" class="form-control form-control-md rounded-end-3" id="inputMunicipio" placeholder="Ex: Prefeitura Municipal de Iconha" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <label for="inputCnpj" class="form-label small fw-semibold text-dark">CNPJ Oficial</label>
+                                    <input type="text" class="form-control form-control-md rounded-3" id="inputCnpj" placeholder="00.000.000/0001-00" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="inputContato" class="form-label small fw-semibold text-dark">E-mail de Contato (Gestor Master)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope-at"></i></span>
+                                        <input type="email" class="form-control form-control-md rounded-end-3" id="inputContato" placeholder="secretaria.ti@municipio.gov.br" required>
+                                    </div>
+                                    <div class="form-text small">Esta conta receberá as credenciais iniciais de "Gestor Municipal".</div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="selectPlano" class="form-label small fw-semibold text-dark">Plano / Licença Contratada</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted"><i class="bi bi-box-se"></i></span>
+                                        <select id="selectPlano" class="form-select form-select-md rounded-end-3" required>
+                                            <option value="" disabled selected>Escolha o nível de contrato...</option>
+                                            <option value="Premium (Full)">Premium (Full) - Módulos de IA + Gráficos completivos</option>
+                                            <option value="Standard">Standard - Até 10 fiscais de campo ativos</option>
+                                            <option value="Básico / Inicial">Básico / Inicial - Apenas triagem básica de Ouvidoria</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label small fw-semibold text-dark d-block mb-2">Status da Licença Contratual</label>
+                                    <div class="d-flex flex-wrap gap-4 mt-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="radioStatus" id="statusAtivo" value="Ativo" checked>
+                                            <label class="form-check-label text-dark small" for="statusAtivo">
+                                                <i class="bi bi-circle-fill text-success me-1 fs-8"></i> Ativo (Instância e subdomínios liberados)
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="radioStatus" id="statusBloqueado" value="Bloqueado">
+                                            <label class="form-check-label text-dark small" for="statusBloqueado">
+                                                <i class="bi bi-circle-fill text-dark me-1 fs-8"></i> Bloqueado (Acesso administrativo suspenso)
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="radioStatus" id="statusInadimplente" value="Inadimplente">
+                                            <label class="form-check-label text-dark small" for="statusInadimplente">
+                                                <i class="bi bi-circle-fill text-warning me-1 fs-8"></i> Inadimplente (Alerta financeiro emitido)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="text-end mt-5 pt-3 border-top">
+                                <a href="gerenciar-clientes.html" class="btn btn-light rounded-pill px-4 me-2">Cancelar</a>
+                                <button type="submit" class="btn btn-teal rounded-pill px-4 fw-bold">
+                                    <i class="bi bi-cloud-arrow-up me-2"></i>Salvar Parametrizations
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h5 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <img src="logo_cor.png" alt="SigoUrbano" class="me-2" style="height:30px; width:auto;"> SigoUrbano
+                    </h5>
+                    <p class="small text-white-50">Distribuição Core Multi-tenant e Isolamento de Bancos de Dados Públicos.</p>
+                </div>
+                <div class="col-md-7 text-center text-md-end align-self-center">
+                    <p class="text-white-50 small mb-0">&copy; 2026 SigoUrbano SaaS Infrastructure. Painel Master Root.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            verificarModoFormulario();
+        });
+
+        // Simulação de alteração contextual com base em parâmetros da URL (id do cliente)
+        function verificarModoFormulario() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const clienteId = urlParams.get('id');
+
+            if (clienteId) {
+                // Altera as tags da página para refletir o modo "Alterar/Editar Cliente"
+                document.getElementById('tituloPagina').textContent = "Configurar Licenciamento de Cliente";
+                document.getElementById('subtituloPagina').textContent = `Modificando permissões e dados contratuais do registro vinculado ao identificador #${clienteId}.`;
+                
+                // Carga de dados mocado de simulação do banco de dados
+                document.getElementById('inputMunicipio').value = "Prefeitura Municipal de Marataízes";
+                document.getElementById('inputCnpj').value = "31.402.991/0001-10";
+                document.getElementById('inputContato').value = "administracao@marataizes.es.gov.br";
+                document.getElementById('selectPlano').value = "Standard";
+                
+                // Simula marcação de inadimplência caso o ID enviado termine em 3
+                if (clienteId === '3') {
+                    document.getElementById('statusInadimplente').checked = true;
+                }
+            }
+        }
+
+        // Captura o submit do formulário para animações e redirecionamento reativo
+        document.getElementById('formClienteCompleto').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Exibe o feedback visual na tela
+            const alerta = document.getElementById('alertFeedback');
+            alerta.classList.remove('d-none');
+            
+            // Rolagem suave até o cabeçalho para leitura do feedback
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Simula retenção de dados e redireciona ao CRUD após 2 segundos
+            setTimeout(() => {
+                window.location.href = "gerenciar-clientes.html";
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

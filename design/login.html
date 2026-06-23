@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigoUrbano - Identificação do Usuário</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* PALETA DE CORES INTEGRADA (Mesmo estilo da Landing Page) */
+        :root {
+            --cor-teal-principal: #009a96;
+            --cor-teal-escuro: #0a7370;
+            --cor-azul-marinho: #0a2540;
+            --cor-azul-marinho-hover: #06182b;
+            --cinza-fundo: #f1f5f9; /* Fundo levemente cinza para destacar o card */
+            --cinza-texto: #4a5568;
+            --cinza-borda: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--cinza-texto);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            /* GRADIENTE AZUL RESTRUTURADO COM MENOR OPACIDADE (0.45) PARA EXIBIR A CIDADE */
+            background: linear-gradient(135deg, rgba(10, 37, 64, 0.45) 0%, rgba(5, 20, 36, 0.55) 100%), 
+                        url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=1920') center/cover no-repeat fixed;
+            padding: 20px;
+        }
+
+        /* Card de Login Centralizado */
+        .card-login {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(10, 37, 64, 0.08);
+            background-color: #ffffff;
+            overflow: hidden;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .card-header-custom {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--cinza-borda);
+            padding: 2.5rem 2rem 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .logo-img {
+            height: 48px;
+            width: auto;
+            margin-bottom: 1rem;
+        }
+
+        .card-body-custom {
+            padding: 2rem;
+        }
+
+        /* Inputs e Elementos Formulários */
+        .form-control:focus {
+            border-color: var(--cor-teal-principal);
+            box-shadow: 0 0 0 0.25rem rgba(0, 154, 150, 0.15);
+        }
+
+        .input-group-text {
+            background-color: var(--cinza-fundo);
+            border-color: #ced4da;
+            color: var(--cinza-texto);
+        }
+
+        /* Botões Customizados */
+        .btn-marinho {
+            background-color: var(--cor-azul-marinho);
+            color: #ffffff;
+            border: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-marinho:hover {
+            background-color: var(--cor-azul-marinho-hover);
+            color: #ffffff;
+        }
+
+        /* Links */
+        .link-teal {
+            color: var(--cor-teal-principal);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .link-teal:hover {
+            color: var(--cor-teal-escuro);
+            text-decoration: underline;
+        }
+
+        .badge-perfil {
+            background-color: var(--cinza-fundo);
+            color: var(--cor-azul-marinho);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            border: 1px solid var(--cinza-borda);
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container p-3 d-flex justify-content-center align-items-center">
+        <div class="card card-login">
+            
+            <div class="card-header-custom">
+                <img src="logo_cor.png" alt="SigoUrbano Logo" class="logo-img">
+                <h1 class="h4 fw-bold mb-1">
+                    <span style="color: var(--cor-teal-principal)">Sigo</span><span style="color: var(--cor-azul-marinho)">Urbano</span>
+                </h1>
+                <p class="text-muted small mb-3">Plataforma Integrada de Zeladoria e Cidadania</p>
+                <span class="badge-perfil"><i class="bi bi-person-circle me-1"></i> Perfil: Usuário Cidadão</span>
+            </div>
+
+            <div class="card-body-custom">
+                <form id="formAutenticacao">
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label small fw-semibold text-muted">E-mail Cadastrado</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input type="email" id="email" class="form-control" placeholder="exemplo@email.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label for="senha" class="form-label small fw-semibold text-muted mb-0">Senha de Acesso</label>
+                            <a href="recuperar-senha.html" class="small link-teal" style="font-size: 0.8rem;">Esqueceu a senha?</a>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input type="password" id="senha" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+                        </div>
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" class="form-check-input" id="manterConectado">
+                        <label class="form-check-label text-muted small" for="manterConectado">Manter-me conectado neste dispositivo</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-marinho w-100 rounded-pill py-2.5 mb-3 shadow-sm">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Entrar no Sistema
+                    </button>
+                    
+                    <div class="text-center mt-3">
+                        <p class="small text-muted mb-0">Ainda não possui uma account? <a href="index.html" class="link-teal">Voltar para o início</a></p>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.getElementById('formAutenticacao').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.toLowerCase();
+            
+            // Lógica de Redirecionamento Baseada no E-mail Digitado
+            if (email.includes('gestor')) {
+                window.location.href = 'painel-gestor.html';
+            } else if (email.includes('fiscal')) {
+                window.location.href = 'painel-fiscal.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>
